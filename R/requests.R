@@ -1,6 +1,6 @@
-#' Parse Serendipia's page with SARS-CoV-2 data in Mexico
+#' Parse Serendipia's page with Covid-19 data in Mexico
 #'
-#' Parse Serendipia's page with SARS-CoV-2 data in Mexico.
+#' Parse Serendipia's page with Covid-19 data in Mexico.
 #'
 #' Mexico's Ministry of Health publishes a daily report containing data about
 #' positive and suspected cases of Covid-19 cases in the country. However, the data is published
@@ -22,10 +22,10 @@ parseSerendipia <-
            targetCSS = "a.wp-block-file__button") {
 
     # First some type and value check
-    if (typeof(targetURL) != "character" | length(targetURL) > 1 ) {
+    if (is.character(targetURL) != "character" | length(targetURL) > 1 ) {
       stop("'targetURL' par must be a character vector of length 1!")
     }
-    if (typeof(targetCSS) != "character" | length(targetCSS) > 1 ) {
+    if (is.character(targetCSS) != "character" | length(targetCSS) > 1 ) {
       stop("'targetCSS' par must be a character vector of length 1!")
     }
 
@@ -40,10 +40,10 @@ parseSerendipia <-
     parsedResponse <- content(x = response, as = "parsed")
 
     # Get all node elements with the target class
-    buttons <- rvest::html_nodes(x  = parsedResponse, css = targetCSS)
+    buttons <- html_nodes(x  = parsedResponse, css = targetCSS)
 
     # Get href attr from node elements
-    hrefs <- rvest::html_attr(x = buttons, name = "href", default = NA)
+    hrefs <- html_attr(x = buttons, name = "href", default = NA)
 
     return(hrefs)
 }
