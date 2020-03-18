@@ -6,8 +6,23 @@
 \usage{
 
   parseSerendipia(targetURL = "https://serendipia.digital/2020/03/datos-abiertos-sobre-casos-de-coronavirus-covid-19-en-mexico/",
-  targetClass = "a.wp-block-file__button")
+  targetCSS = "a.wp-block-file__button")
+}
+\arguments{
+\item{targetURL}{Target URL of the HTTP request. `character` vector of length 1.}
+
+\item{targetCSS}{CSS selector of the nodes containing the data files URL. `character` vector of length 1.}
+}
+\value{
+A character vector with the documents URL
 }
 \description{
-Parse Serendipia's page with SARS-CoV-2 data in Mexico
+Parse Serendipia's page with SARS-CoV-2 data in Mexico.
+}
+\details{
+Mexico's Ministry of Health publishes a daily report containing data about
+positive and suspected cases of Covid-19 cases in the country. However, the data is published
+as a PDF document, difficulting further analysis. Serendipia, a data based journalism initiative,
+publishes CSV and XLSX versions of the official reports. This function makes a request to
+Serendipia's Covid-19 data page and parses the links that redirect to the data files.
 }
