@@ -1,8 +1,17 @@
 #' Parse Serendipia's page with SARS-CoV-2 data in Mexico
 #'
-#' Parse Serendiía's page with SARS-CoV-2 data in Mexico.
+#' Parse Serendipia's page with SARS-CoV-2 data in Mexico.
 #'
-#' Mexico's Ministry of Health publishes, everyday,a report containing
+#' Mexico's Ministry of Health publishes a daily report containing data about
+#' positive and suspected cases of Covid-19 cases in the country. However, the data is published
+#' as a PDF document, difficulting further analysis. Serendipia, a data based journalism initiative,
+#' publishes CSV and XLSX versions of the official reports. This function makes a request to
+#' Serendipia's Covid-19 data page and parses the links that redirect to the data files.
+#'
+#' @return A character vector with the documents URL
+#'
+#' @param targetURL Target URL of the HTTP request. `character` vector of length 1.
+#' @param targetCSS CSS selector of the nodes containing the data files URL. `character` vector of length 1.
 #'
 #' @import httr
 #' @import rvest
@@ -10,14 +19,14 @@
 
 parseSerendipia <-
   function(targetURL = "https://serendipia.digital/2020/03/datos-abiertos-sobre-casos-de-coronavirus-covid-19-en-mexico/",
-           targetClass = "a.wp-block-file__button") {
+           targetCSS = "a.wp-block-file__button") {
 
     # First some type and value check
     if (typeof(targetURL) != "character" | length(targetURL) > 1 ) {
       stop("'targetURL' par must be a character vector of length 1!")
     }
-    if (typeof(targetClass) != "character" | length(targetClass) > 1 ) {
-      stop("'targetClass' par must be a character vector of length 1!")
+    if (typeof(targetCSS) != "character" | length(targetCSS) > 1 ) {
+      stop("'targetCSS' par must be a character vector of length 1!")
     }
 
     # Send page request to targetURL
@@ -30,10 +39,10 @@ parseSerendipia <-
     # Parse response
     parsedResponse <- content(x = response, as = "parsed")
 
-    # Get all DOM elements with the target class
-    buttons <- rvest::html_nodes(x  = parsedResponse, css = targetClass)
+    # Get all node elements with the target class
+    buttons <- rvest::html_nodes(x  = parsedResponse, css = targetCSS)
 
-    # Get href attr from DOM elements
+    # Get href attr from node elements
     hrefs <- rvest::html_attr(x = buttons, name = "href", default = NA)
 
     return(hrefs)
