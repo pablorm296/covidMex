@@ -1,0 +1,12 @@
+---
+title: "README"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## TODO
+
+* [ ] Write a ¿python? API to provide data. Evitar dependencia de la página de Serendipia.
