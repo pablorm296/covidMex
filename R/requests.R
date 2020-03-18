@@ -8,7 +8,7 @@
 #' publishes CSV and XLSX versions of the official reports. This function makes a request to
 #' Serendipia's Covid-19 data page and parses the links that redirect to the data files.
 #'
-#' @return A character vector with the documents URL
+#' @return A `character`` vector with the documents URL
 #'
 #' @param targetURL Target URL of the HTTP request. `character` vector of length 1.
 #' @param targetCSS CSS selector of the nodes containing the data files URL. `character` vector of length 1.
@@ -22,10 +22,10 @@ parseSerendipia <-
            targetCSS = "a.wp-block-file__button") {
 
     # First some type and value check
-    if (is.character(targetURL) != "character" | length(targetURL) > 1 ) {
+    if (!is.character(targetURL) | length(targetURL) > 1 ) {
       stop("'targetURL' par must be a character vector of length 1!")
     }
-    if (is.character(targetCSS) != "character" | length(targetCSS) > 1 ) {
+    if (!is.character(targetCSS) | length(targetCSS) > 1 ) {
       stop("'targetCSS' par must be a character vector of length 1!")
     }
 
