@@ -41,7 +41,28 @@ confirmados <- getData(type = "confirmed", date = "today")
 sospechosos_old <- getData(type = "suspect", date = "15/03/2020")
 ```
 
-Por el momento, `getData` descarga los datos de _(Serendipia)[https://serendipia.digital/2020/03/datos-abiertos-sobre-casos-de-coronavirus-covid-19-en-mexico/]_, una iniciativa de periodismo de datos que ha publicado, en días recientes, versiones .csv y .xlsx (creadas con [I:heart:PDF](https://www.ilovepdf.com/es)) de los reportes publicados por la Secretaría de Salud del Gobierno de México. En próximas actualizaciones programaré un script que creará, automaticamente, versiones .csv del reporte de SALUD y que serán accesibles a partir de una API y de este paquete.
+```{r include=FALSE}
+library(tidyverse)
+library(extrafont)
+```
+
+```{r}
+confirmados %>%
+  mutate_at("N° Caso", as.integer)  %>%
+  mutate(GrupoEdad = cut(Edad, breaks = c(seq(0, 80, by = 10), Inf))) %>%
+  ggplot() +
+  geom_bar(aes(x = GrupoEdad, y = ..count..), colour = "#CC7390", 
+           fill = "#CC7390", alpha = 0.5, na.rm = T) +
+  labs(x = "Grupo de Edad", y = "Casos",
+       title = "¿Qué edad tienen los infectados de SARS-CoV-2 en México?") +
+  theme_light() + 
+  theme(text = element_text(family = "Quicksand Medium"),
+        title = element_text(family = "Keep Calm Med"))
+  
+```
+
+
+Por el momento, `getData` descarga los datos de _[Serendipia](https://serendipia.digital/2020/03/datos-abiertos-sobre-casos-de-coronavirus-covid-19-en-mexico/)_, una iniciativa de periodismo de datos que ha publicado, en días recientes, versiones .csv y .xlsx (creadas con [I:heart:PDF](https://www.ilovepdf.com/es)) de los reportes publicados por la Secretaría de Salud del Gobierno de México. En próximas actualizaciones programaré un script que creará, automaticamente, versiones .csv del reporte de SALUD y que serán accesibles a partir de una API y de este paquete.
 
 ## TODO  :white_check_mark:
 

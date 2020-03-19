@@ -3,7 +3,7 @@ covidMex
 
 Un paquete para obtener datos oficiales sobre casos de Covid-19 en
 México. Creado por [Pablo Reyes](https://twitter.com/pablorm296).
-Última actualizacion: **Wed Mar 18 18:20:05
+Última actualizacion: **Wed Mar 18 18:45:20
 2020**
 
 ## Build & Test Info :construction\_worker:
@@ -92,8 +92,26 @@ sospechosos_old <- getData(type = "suspect", date = "15/03/2020")
     ##   `Fecha del llegada a México` = col_character()
     ## )
 
+``` r
+confirmados %>%
+  mutate_at("N° Caso", as.integer)  %>%
+  mutate(GrupoEdad = cut(Edad, breaks = c(seq(0, 80, by = 10), Inf))) %>%
+  ggplot() +
+  geom_bar(aes(x = GrupoEdad, y = ..count..), colour = "#CC7390", 
+           fill = "#CC7390", alpha = 0.5, na.rm = T) +
+  labs(x = "Grupo de Edad", y = "Casos",
+       title = "¿Qué edad tienen los infectados de SARS-CoV-2 en México?") +
+  theme_light() + 
+  theme(text = element_text(family = "Quicksand Medium"),
+        title = element_text(family = "Keep Calm Med"))
+```
+
+    ## Warning: NAs introducidos por coerción
+
+![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+
 Por el momento, `getData` descarga los datos de
-*(Serendipia)\[<https://serendipia.digital/2020/03/datos-abiertos-sobre-casos-de-coronavirus-covid-19-en-mexico/>\]*,
+*[Serendipia](https://serendipia.digital/2020/03/datos-abiertos-sobre-casos-de-coronavirus-covid-19-en-mexico/)*,
 una iniciativa de periodismo de datos que ha publicado, en días
 recientes, versiones .csv y .xlsx (creadas con
 [I:heart:PDF](https://www.ilovepdf.com/es)) de los reportes publicados
