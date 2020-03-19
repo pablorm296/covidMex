@@ -187,17 +187,16 @@ GetFromGuzmart <-
       parsedDatePar <- date
     }
 
-    # Get character prepresentation of the date
-    strDate <- format(parsedDatePar, "%Y%m%d")
-
     # Try to get data from today's date
     continue <- TRUE
     count <- 1
     while (continue) {
+      # Get character prepresentation of the date
+      strDate <- format(parsedDatePar, "%Y%m%d")
       # Make request and save response file in temp directory
-      full_targetURL <- paste(targetURL, filePrefix, fileExt, sep = "")
+      full_targetURL <- paste(targetURL, filePrefix, strDate, fileExt, sep = "")
       targetFile <- tempfile("covid19Mex_", fileext = fileExt)
-      response <- GET(url = targetURL, write_disk(targetFile, overwrite = T),
+      response <- GET(url = full_targetURL, write_disk(targetFile, overwrite = T),
                       add_headers(`User-Agent` = "R Package (covidMex)",
                       `X-Package-Version` = as.character(packageVersion("covidMex")),
                       `X-R-Version` = R.version.string))
@@ -213,7 +212,11 @@ GetFromGuzmart <-
         parsedDatePar <- parsedDatePar - days(1)
       } else {
         continue <- FALSE
-        data <- read_excel(targetFile)
+        suppressWarnings({
+          data <- read_excel(targetFile)
+          data$fecha_llegada_mexico <- as.integer(data$fecha_llegada_mexico)
+          data$fecha_llegada_mexico <- as.Date(data$fecha_llegada_mexico, origin = "1899-12-30")
+        })
       }
     }
 
