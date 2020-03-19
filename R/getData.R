@@ -19,7 +19,7 @@
 #'
 #' @export
 
-getData <- function(type = "confirmed", date = "today", source = "Serendipia") {
+getData <- function(type = "confirmed", date = "today", source = "Guzmart") {
   # First some type and value check
   if (!is.character(type) | length(type) > 1 ) {
     stop("'type' par must be a character vector of length 1!")

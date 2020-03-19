@@ -4,7 +4,7 @@
 \alias{getData}
 \title{Get official data about Covid-19 cases in Mexico}
 \usage{
-getData(type = "confirmed", date = "today", source = "Serendipia")
+getData(type = "confirmed", date = "today", source = "Guzmart")
 }
 \arguments{
 \item{type}{Get `confirmed` or `suspect` cases?. `character` vector of length 1.}
