@@ -1,5 +1,5 @@
 ---
-title: "README"
+title: "covidMex"
 output: github_document
 ---
 
@@ -7,6 +7,42 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## TODO
+Un paquete para obtener datos oficiales sobre casos de Covid-19 en México. Creado por [Pablo Reyes](https://twitter.com/pablorm296). Última actualizacion: __`r date()`__
+
+## Build & Test Info  :construction_worker:
+
+```{r echo=FALSE}
+knitr::kable(as.data.frame(R.Version()))
+```
+
+
+## Instalación  :package:
+
+Para instalar el paquete, es necesario usar `install_github`, pues el paquete no está disponible en la CRAN.
+
+```r
+devtools::install_github("pablorm296/covidMex")
+```
+
+## Uso  :question:
+
+Para obtener los datos, usa la función `getData`. En ella puedes especificar el tipo de reporte a cargar (casos confirmados o casos sospechosos), así como la versión del reporte (fecha en que fue publicado). Por default, `getData` descargará el reporte del día de casos confirmados (`type = "suspect", date = "today"`). Si todavía no se publica el reporte diario, `getData` descargará el reporte del día anterior y notificará al usuario por medio de una `warning`.
+
+```{r}
+library(covidMex)
+
+# Descargar reporte de casos sospechosos
+sospechosos <- getData(type = "suspect", date = "today")
+
+# Descargar reporte de casos confirmados
+confirmados <- getData(type = "confirmed", date = "today")
+
+# Descarga una versión anterior del reprote
+sospechosos_old <- getData(type = "suspect", date = "15/03/2020")
+```
+
+Por el momento, `getData` descarga los datos de _(Serendipia)[https://serendipia.digital/2020/03/datos-abiertos-sobre-casos-de-coronavirus-covid-19-en-mexico/]_, una iniciativa de periodismo de datos que ha publicado, en días recientes, versiones .csv y .xlsx (creadas con [I:heart:PDF](https://www.ilovepdf.com/es)) de los reportes publicados por la Secretaría de Salud del Gobierno de México. En próximas actualizaciones programaré un script que creará, automaticamente, versiones .csv del reporte de SALUD y que serán accesibles a partir de una API y de este paquete.
+
+## TODO  :white_check_mark:
 
 * [ ] Write a ¿python? API to provide data. Evitar dependencia de la página de Serendipia.
