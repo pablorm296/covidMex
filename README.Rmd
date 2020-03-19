@@ -26,9 +26,11 @@ devtools::install_github("pablorm296/covidMex")
 
 ## Uso  :question:
 
+### Básicos
+
 Para obtener los datos, usa la función `getData`. En ella puedes especificar el tipo de reporte a cargar (casos confirmados o casos sospechosos), así como la versión del reporte (fecha en que fue publicado). Por default, `getData` descargará el reporte del día de casos confirmados (`type = "suspect", date = "today"`). Si todavía no se publica el reporte diario, `getData` descargará el reporte del día anterior y notificará al usuario por medio de una `warning`.
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 library(covidMex)
 
 # Descargar reporte de casos sospechosos
@@ -41,6 +43,8 @@ confirmados <- getData(type = "confirmed", date = "today")
 sospechosos_old <- getData(type = "suspect", date = "15/03/2020")
 ```
 
+### Generando gráficas a partir de los datos
+
 ```{r include=FALSE}
 library(tidyverse)
 library(extrafont)
@@ -48,7 +52,6 @@ library(extrafont)
 
 ```{r}
 confirmados %>%
-  mutate_at("N° Caso", as.integer)  %>%
   mutate(GrupoEdad = cut(Edad, breaks = c(seq(0, 80, by = 10), Inf))) %>%
   ggplot() +
   geom_bar(aes(x = GrupoEdad, y = ..count..), colour = "#CC7390", 
@@ -64,6 +67,14 @@ confirmados %>%
 
 Por el momento, `getData` descarga los datos de _[Serendipia](https://serendipia.digital/2020/03/datos-abiertos-sobre-casos-de-coronavirus-covid-19-en-mexico/)_, una iniciativa de periodismo de datos que ha publicado, en días recientes, versiones .csv y .xlsx (creadas con [I:heart:PDF](https://www.ilovepdf.com/es)) de los reportes publicados por la Secretaría de Salud del Gobierno de México. En próximas actualizaciones programaré un script que creará, automaticamente, versiones .csv del reporte de SALUD y que serán accesibles a partir de una API y de este paquete.
 
+## Fuentes
+
+
+
 ## TODO  :white_check_mark:
 
 * [ ] Write a ¿python? API to provide data. Evitar dependencia de la página de Serendipia.
+
+## Licence
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Licencia Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />Esta obra está bajo una <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Licencia Creative Commons Atribución-NoComercial-CompartirIgual 4.0 Internacional</a>

@@ -3,7 +3,7 @@ covidMex
 
 Un paquete para obtener datos oficiales sobre casos de Covid-19 en
 México. Creado por [Pablo Reyes](https://twitter.com/pablorm296).
-Última actualizacion: **Wed Mar 18 18:45:20
+Última actualizacion: **Wed Mar 18 23:08:39
 2020**
 
 ## Build & Test Info :construction\_worker:
@@ -23,6 +23,8 @@ devtools::install_github("pablorm296/covidMex")
 
 ## Uso :question:
 
+### Básicos
+
 Para obtener los datos, usa la función `getData`. En ella puedes
 especificar el tipo de reporte a cargar (casos confirmados o casos
 sospechosos), así como la versión del reporte (fecha en que fue
@@ -36,65 +38,18 @@ library(covidMex)
 
 # Descargar reporte de casos sospechosos
 sospechosos <- getData(type = "suspect", date = "today")
-```
 
-    ## Warning in getData(type = "suspect", date = "today"): The specified date
-    ## (2020-03-18) is not available... trying yesterday's date instead
-
-    ## Parsed with column specification:
-    ## cols(
-    ##   `N° Caso` = col_character(),
-    ##   Estado = col_character(),
-    ##   Sexo = col_character(),
-    ##   Edad = col_double(),
-    ##   `Fecha de Inicio de síntomas` = col_character(),
-    ##   `Identificación de COVID-19 por RT-
-    ## PCR/Secuencia de DNA*` = col_character(),
-    ##   Procedencia = col_character(),
-    ##   `Fecha del llegada a México` = col_character()
-    ## )
-
-``` r
 # Descargar reporte de casos confirmados
 confirmados <- getData(type = "confirmed", date = "today")
-```
 
-    ## Warning in getData(type = "confirmed", date = "today"): The specified date
-    ## (2020-03-18) is not available... trying yesterday's date instead
-
-    ## Parsed with column specification:
-    ## cols(
-    ##   `N° Caso` = col_character(),
-    ##   Estado = col_character(),
-    ##   Sexo = col_character(),
-    ##   Edad = col_double(),
-    ##   `Fecha de Inicio de síntomas` = col_character(),
-    ##   `Identificación de COVID-19
-    ## por RT- PCR/Secuencia de DNA*` = col_character(),
-    ##   Procedencia = col_character(),
-    ##   `Fecha del llegada a México` = col_character()
-    ## )
-
-``` r
 # Descarga una versión anterior del reprote
 sospechosos_old <- getData(type = "suspect", date = "15/03/2020")
 ```
 
-    ## Parsed with column specification:
-    ## cols(
-    ##   `N° Caso` = col_character(),
-    ##   Estado = col_character(),
-    ##   Sexo = col_character(),
-    ##   Edad = col_double(),
-    ##   `Fecha de Inicio de síntomas` = col_character(),
-    ##   `Identificación de COVID-19 por RT-PCR/Secuencia de DNA*` = col_character(),
-    ##   Procedencia = col_character(),
-    ##   `Fecha del llegada a México` = col_character()
-    ## )
+### Generando gráficas a partir de los datos
 
 ``` r
 confirmados %>%
-  mutate_at("N° Caso", as.integer)  %>%
   mutate(GrupoEdad = cut(Edad, breaks = c(seq(0, 80, by = 10), Inf))) %>%
   ggplot() +
   geom_bar(aes(x = GrupoEdad, y = ..count..), colour = "#CC7390", 
@@ -105,8 +60,6 @@ confirmados %>%
   theme(text = element_text(family = "Quicksand Medium"),
         title = element_text(family = "Keep Calm Med"))
 ```
-
-    ## Warning: NAs introducidos por coerción
 
 ![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
@@ -120,7 +73,18 @@ actualizaciones programaré un script que creará, automaticamente,
 versiones .csv del reporte de SALUD y que serán accesibles a partir de
 una API y de este paquete.
 
+## Fuentes
+
 ## TODO :white\_check\_mark:
 
   - \[ \] Write a ¿python? API to provide data. Evitar dependencia de la
-    página de Serendipia.
+    página de
+Serendipia.
+
+## Licence
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Licencia Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />Esta
+obra está bajo una
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Licencia
+Creative Commons Atribución-NoComercial-CompartirIgual 4.0
+Internacional</a>
