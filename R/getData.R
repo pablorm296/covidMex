@@ -17,6 +17,8 @@
 #' This package relies on third party sources to get an "open data" version of the report.
 #' `character` vector of length 1. Possible data sources are: `Serendipia`.
 #'
+#' @importFrom tibble tibble
+#' @importFrom readr read_csv
 #' @import lubridate
 #' @import stringr
 #' @import httr

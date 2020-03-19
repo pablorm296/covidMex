@@ -14,7 +14,7 @@
 \item{targetCSS}{CSS selector of the nodes containing the data files URL. `character` vector of length 1.}
 }
 \value{
-A character vector with the documents URL
+A `character`` vector with the documents URL
 }
 \description{
 Parse Serendipia's page with Covid-19 data in Mexico.
