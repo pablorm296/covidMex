@@ -9,13 +9,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Un paquete para obtener datos oficiales sobre casos de Covid-19 en México. Creado por [Pablo Reyes](https://twitter.com/pablorm296). Última actualizacion: __`r date()`__
 
-## Build & Test Info  :construction_worker:
-
-```{r echo=FALSE}
-knitr::kable(as.data.frame(R.Version()))
-```
-
-
 ## Instalación  :package:
 
 Para instalar el paquete, es necesario usar `install_github`, pues el paquete no está disponible en la CRAN.
@@ -28,20 +21,53 @@ devtools::install_github("pablorm296/covidMex")
 
 ### Básicos
 
-Para obtener los datos, usa la función `getData`. En ella puedes especificar el tipo de reporte a cargar (casos confirmados o casos sospechosos), así como la versión del reporte (fecha en que fue publicado). Por default, `getData` descargará el reporte del día de casos confirmados (`type = "suspect", date = "today"`). Si todavía no se publica el reporte diario, `getData` descargará el reporte del día anterior y notificará al usuario por medio de una `warning`.
+Para obtener los datos, usa la función `getData`. Usando el parámetro `type` puedes especificar el tipo de reporte a cargar (casos confirmados o casos sospechosos) y con el parámetro `date`especificas la versión del reporte (fecha en que fue publicado). Por default, `getData` descargará el reporte del día de casos confirmados (`type = "suspect", date = "today"`). Si todavía no se publica el reporte diario, `getData` descargará el reporte del día anterior y notificará al usuario por medio de una `warning`.
 
 ```{r message=FALSE, warning=FALSE}
 library(covidMex)
 
 # Descargar reporte de casos sospechosos
-sospechosos <- getData(type = "suspect", date = "today")
+sospechosos <- getData(type = "suspect", source = "Serendipia")
 
 # Descargar reporte de casos confirmados
-confirmados <- getData(type = "confirmed", date = "today")
+confirmados <- getData(type = "confirmed")
 
-# Descarga una versión anterior del reprote
-sospechosos_old <- getData(type = "suspect", date = "15/03/2020")
+# Descarga una versión anterior del reporte
+sospechosos_old <- getData(type = "confirmed", date = "16/03/2020")
 ```
+
+Por el momento, `getData` descarga los datos de dos fuentes:
+
+1. **Serendipia:** _[Serendipia](https://serendipia.digital/2020/03/datos-abiertos-sobre-casos-de-coronavirus-covid-19-en-mexico/)_, una iniciativa de periodismo de datos que ha publicado, en días recientes, versiones .csv y .xlsx (creadas con [I:heart:PDF](https://www.ilovepdf.com/es)) de los reportes publicados por la Secretaría de Salud del Gobierno de México.
+2. **covid19_mex:** Un [repositorio en GitHub](https://github.com/guzmart/covid19_mex) creado por [Katia Guzmán Martínez](https://twitter.com/guzmart_). Katia, además de convertirlo en formarto abierto, hace una revisión manual del reporte publicado por la Secretaría de Salud del Gobierno de México. Por esta razón, esta fuente es la principal al momento de descargar la tabla de casos confirmados. **Esta fuente de datos sólo tiene tabla de casos confirmados**.
+
+El usuario siempre puede especificar la fuente datos que desea usar con el parámetro `source`, aunque por deafult, para casos confirmados se usa el repositorio de Katia Guzmán y, para casos sospechosos, la página de Serendipia
+
+```r
+# Descargar reporte de casos confirmados 
+# (Por defaul lo hará del repositorio de Katia)
+confirmados <- getData(type = "confirmed")
+
+# Descargar reporte de casos confirmados 
+# (Podemos especificar que queremos el de Serendipia)
+confirmados <- getData(type = "confirmed", source = "Serendipia")
+```
+
+Adicionalmente, cada vez que el usuario cargue el paquete, un mensaje le notificará las fuentes de datos disponibles
+
+```r
+library(covidMex)
+```
+```
+covidMex Package
+Versión: 0.2.0
+Last Update: 19/03/2020
+Available Data Sources:
+    Confirmed Cases Table: Serendipia, Guzmart
+    Suspect Cases Table: Serendipia
+```
+
+En próximas actualizaciones programaré un script que creará, automaticamente, versiones .csv del reporte de SALUD y que serán accesibles a partir de una API y de este paquete.
 
 ### Generando gráficas a partir de los datos
 
@@ -50,9 +76,9 @@ library(tidyverse)
 library(extrafont)
 ```
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 confirmados %>%
-  mutate(GrupoEdad = cut(Edad, breaks = c(seq(0, 80, by = 10), Inf))) %>%
+  mutate(GrupoEdad = cut(edad, breaks = c(seq(0, 80, by = 10), Inf))) %>%
   ggplot() +
   geom_bar(aes(x = GrupoEdad, y = ..count..), colour = "#CC7390", 
            fill = "#CC7390", alpha = 0.5, na.rm = T) +
@@ -64,17 +90,31 @@ confirmados %>%
   
 ```
 
-
-Por el momento, `getData` descarga los datos de _[Serendipia](https://serendipia.digital/2020/03/datos-abiertos-sobre-casos-de-coronavirus-covid-19-en-mexico/)_, una iniciativa de periodismo de datos que ha publicado, en días recientes, versiones .csv y .xlsx (creadas con [I:heart:PDF](https://www.ilovepdf.com/es)) de los reportes publicados por la Secretaría de Salud del Gobierno de México. En próximas actualizaciones programaré un script que creará, automaticamente, versiones .csv del reporte de SALUD y que serán accesibles a partir de una API y de este paquete.
-
 ## Fuentes
 
+Las versiones _plain text_ de los reportes de la Secretaría de Salud que se usan en este paquete fueron publicadas originalmente en:
 
+* Redacción, "Datos abiertos sobre casos de Coronavirus COVID-19 en México", en _Serendipia: Periodismo de datos_, https://serendipia.digital/2020/03/datos-abiertos-sobre-casos-de-coronavirus-covid-19-en-mexico/, consultado el 18 de marzo de 2020.
+
+* Katia Guzmán Martínez, "covid19_mex: Publicación de datos oficiales (Secretaría de Salud) en formato amigable", en _GitHub_, 16 de marzo de 2020, https://github.com/guzmart/covid19_mex, consultado el 18 de marzo de 2020.
+
+## Build & Test Info  :construction_worker:
+
+__Probado en:__
+
+```{r echo=FALSE}
+knitr::kable(as.data.frame(R.Version()))
+```
+
+__R CMD Check__:
+```{r echo=FALSE}
+devtools::check(error_on = "never")
+```
 
 ## TODO  :white_check_mark:
 
 * [ ] Write a ¿python? API to provide data. Evitar dependencia de la página de Serendipia.
 
-## Licence
+## Licencia
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Licencia Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />Esta obra está bajo una <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Licencia Creative Commons Atribución-NoComercial-CompartirIgual 4.0 Internacional</a>
