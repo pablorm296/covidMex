@@ -6,6 +6,7 @@ Author: Pablo Reyes Moctezuma
 Maintainer: Pablo Reyes Moctezumar <preyes@colmex.mx>
 Description: Gets official counts of suspected and positive cases of Covid-19 for Mexico
 License: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License
+Imports: httr, lubridate, readr, readxl, rvest, stringr, tibble
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
