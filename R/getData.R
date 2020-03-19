@@ -17,11 +17,6 @@
 #' This package relies on third party sources to get an "open data" version of the report.
 #' `character` vector of length 1. Possible data sources are: `Serendipia`.
 #'
-#' @importFrom tibble tibble
-#' @importFrom readr read_csv
-#' @import lubridate
-#' @import stringr
-#' @import httr
 #' @export
 
 getData <- function(type = "confirmed", date = "today", source = "Serendipia") {
@@ -39,76 +34,23 @@ getData <- function(type = "confirmed", date = "today", source = "Serendipia") {
   # Try to parse date as date
   if (!is.Date(date)) {
     # If str = today use today's date, else use dmy
-    if (date == "today") parsedDate <- today() else parsedDate <- dmy(date, quiet = T)
+    if (date == "today") parsedDatePar <- today() else parsedDatePar <- dmy(date, quiet = T)
+  } else {
+    parsedDatePar <- date
   }
 
   # User can choose between data sources
-  # As of v. 0.1.0, only Serendipia is available
+  # As of v. 0.2.0, Serendipia and Guzmanart are available
+  # User asked for Serendipia as data source
   if (tolower(source) == "serendipia") {
-    # get URL of the documents
-    hrefs <- covidMex::parseSerendipia()
-
-    # Filter urls (confirmed vs suspected cases)
-    # First create a regex patter that depends on the type of cases
-    if (type == "confirmed") {
-      pattern <- "(?=positivos).*_(\\d*.\\d*.\\d*)"
-    }  else if (type == "suspect") {
-      pattern <- "(?=sospechosos).*_(\\d*.\\d*.\\d*)"
-    } else {
-      stop("Unknown data type! Available data types: 'confirmed' or 'suspect'")
+    data <- covidMex::GetFromSerendipia(type = type, date = parsedDatePar)
+  # User asked for Guzmaart GitHub page as data source
+  } else if (tolower(source) == "guzmart") {
+    # Guzmart has no suspect cases data :(
+    if (type == "suspect") {
+      stop("Sorry! The suspect cases table is only available in Serendipia's data page. Please use source='Serendipia'")
     }
-
-    # Filter
-    hrefs <- hrefs[grepl(pattern = pattern, x = hrefs, perl = T)]
-
-    # Get dates of the documents
-    # The second column of the matrix corresponds to the date in the document name
-    dates <- str_match(hrefs, pattern = pattern)[,2]
-
-    # Get parsed version of the dates
-    parsedDates <- parse_date_time(x = dates, orders = "%Y.%m.%d")
-
-    # Build a tibble with the data
-    cat <- tibble(hrefs, dates, parsedDates)
-
-    # Try to get data from today's date
-    continue <- TRUE
-    count <- 1
-    while (continue) {
-      # Subset comparing parsedDate
-      catSubset <- cat[cat$parsedDates == parsedDate,]
-      # Count number of rows of subset result
-      # No rows means that there's not yet data for today
-      if (nrow(catSubset) == 0) {
-        if (count > 5) {
-          stop(paste("The specified date (", parsedDate ,") is not available (stopped because too many attempts)",
-                     sep = ""))
-        }
-        count <- count + 1
-        warning(paste("The specified date (", parsedDate ,") is not available... trying yesterday's date instead",
-                      sep = ""))
-        parsedDate <- parsedDate - days(1)
-      } else {
-        continue <- FALSE
-      }
-    }
-
-    # Get URL from subset result
-    targetURL <- catSubset$hrefs[1]
-
-    # Define temp file name
-    fileExt <- str_match(targetURL, ".*\\.(\\w+)")[,2]
-    targetFile <- tempfile("covid19Mex_", fileext = fileExt)
-
-    # Make request and save response file in temp directory
-    GET(url = targetURL, write_disk(targetFile, overwrite = T),
-        add_headers(`User-Agent` = "R Package (covidMex)",
-                    `X-Package-Version` = as.character(packageVersion("covidMex")),
-                    `X-R-Version` = R.version.string))
-
-    # Read file
-    data <- read_csv(targetFile)
-
+    data <- covidMex::GetFromGuzmart(date = parsedDatePar)
   } else {
     stop("Unknown data source! Available data sources: 'Serendipia'")
   }
