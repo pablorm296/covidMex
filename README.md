@@ -3,7 +3,7 @@ covidMex
 
 Un paquete para obtener datos oficiales sobre casos de Covid-19 en
 México. Creado por [Pablo Reyes](https://twitter.com/pablorm296).
-Última actualizacion: **Fri Mar 20 23:34:30 2020**
+Última actualizacion: **Fri Mar 20 23:39:26 2020**
 
 ## Instalación :package:
 
@@ -178,7 +178,7 @@ en:**
     ─  checking for empty or unneeded directories
     ## 
       
-    ─  building ‘covidMex_0.2.0.tar.gz’
+    ─  building ‘covidMex_0.2.1.tar.gz’
     ## 
       
        
@@ -191,7 +191,7 @@ en:**
     ## ● _R_CHECK_FORCE_SUGGESTS_          : FALSE
     ## ── R CMD check ────────────────────────────────────────────────────────────
     ##   
-    ─  using log directory ‘/tmp/RtmpgtkwDo/covidMex.Rcheck’
+    ─  using log directory ‘/tmp/RtmpmzCdQ9/covidMex.Rcheck’
     ## 
       
     ─  using R version 3.6.3 (2020-02-29)
@@ -208,14 +208,14 @@ en:**
     ─  checking extension type ... Package
     ## 
       
-    ─  this is package ‘covidMex’ version ‘0.2.0’
+    ─  this is package ‘covidMex’ version ‘0.2.1’
     ## ─  package encoding: UTF-8
     ##    checking package namespace information ...
       
     ✔  checking package namespace information
     ##    checking package dependencies ...
       
-    ✔  checking package dependencies (5.4s)
+    ✔  checking package dependencies (2.8s)
     ## 
       
     ✔  checking if this is a source package
@@ -235,7 +235,7 @@ en:**
     ## ✔  checking serialization versions
     ##    checking whether package ‘covidMex’ can be installed ...
       
-    ✔  checking whether package ‘covidMex’ can be installed (1.9s)
+    ✔  checking whether package ‘covidMex’ can be installed (2s)
     ## 
       
        checking installed package size ...
@@ -248,24 +248,17 @@ en:**
     ✔  checking package directory
     ##    checking for future file timestamps ...
       
-    ✔  checking for future file timestamps (1.4s)
+    ✔  checking for future file timestamps (845ms)
     ## 
       
        checking DESCRIPTION meta-information ...
       
-    N  checking DESCRIPTION meta-information
-    ## 
-      
-       Malformed Description field: should contain one or more complete sentences.
-    ## 
-      
-       Non-standard license specification:
+    W  checking DESCRIPTION meta-information
+    ##    Non-standard license specification:
     ##      Creative Commons Attribution-NonCommercial-ShareAlike 4.0
     ##      International License
     ##    Standardizable: FALSE
     ## 
-      
-       checking top-level files ...
       
     N  checking top-level files
     ##    Non-standard files/directories found at top level:
@@ -274,9 +267,7 @@ en:**
          ‘README.Rmd’ ‘README_files’
     ## ✔  checking for left-over files
     ## ✔  checking index information
-    ## 
-      
-       checking package subdirectories ...
+    ##    checking package subdirectories ...
       
     ✔  checking package subdirectories
     ## 
@@ -293,57 +284,55 @@ en:**
       
        checking whether the package can be loaded ...
       
-    ✔  checking whether the package can be loaded (493ms)
+    ✔  checking whether the package can be loaded (549ms)
     ## 
       
        checking whether the package can be loaded with stated dependencies ...
       
-    ✔  checking whether the package can be loaded with stated dependencies (400ms)
+    ✔  checking whether the package can be loaded with stated dependencies (434ms)
     ## 
       
        checking whether the package can be unloaded cleanly ...
       
-    ✔  checking whether the package can be unloaded cleanly (426ms)
+    ✔  checking whether the package can be unloaded cleanly (455ms)
     ## 
       
        checking whether the namespace can be loaded with stated dependencies ...
       
-    ✔  checking whether the namespace can be loaded with stated dependencies (388ms)
-    ## 
+    ✔  checking whether the namespace can be loaded with stated dependencies (468ms)
+    ##    checking whether the namespace can be unloaded cleanly ...
       
-       checking whether the namespace can be unloaded cleanly ...
-      
-    ✔  checking whether the namespace can be unloaded cleanly (484ms)
+    ✔  checking whether the namespace can be unloaded cleanly (754ms)
     ## 
       
        checking loading without being on the library search path ...
       
-    ✔  checking loading without being on the library search path (505ms)
+    ✔  checking loading without being on the library search path (573ms)
     ## 
       
        checking dependencies in R code ...
       
-    ✔  checking dependencies in R code (404ms)
+    ✔  checking dependencies in R code (457ms)
     ## 
       
        checking S3 generic/method consistency ...
       
-    ✔  checking S3 generic/method consistency (782ms)
+    ✔  checking S3 generic/method consistency (866ms)
     ## 
       
        checking replacement functions ...
       
-    ✔  checking replacement functions (413ms)
+    ✔  checking replacement functions (465ms)
     ## 
       
        checking foreign function calls ...
       
-    ✔  checking foreign function calls (415ms)
+    ✔  checking foreign function calls (453ms)
     ## 
       
        checking R code for possible problems ...
       
-    N  checking R code for possible problems (2.5s)
+    N  checking R code for possible problems (2.8s)
     ##    GetFromGuzmart: no visible global function definition for
     ##      ‘packageVersion’
     ##    GetFromSerendipia: no visible global function definition for
@@ -368,7 +357,9 @@ en:**
        checking Rd line widths ...
       
     N  checking Rd line widths
-    ##    Rd file 'GetFromGuzmart.Rd':
+    ## 
+      
+       Rd file 'GetFromGuzmart.Rd':
     ##      \usage lines wider than 90 characters:
     ##           GetFromGuzmart(targetURL = "https://github.com/guzmart/covid19_mex/raw/master/01_datos/",
     ##    
@@ -376,9 +367,7 @@ en:**
     ##      \usage lines wider than 90 characters:
     ##           GetFromSerendipia(targetURL = "https://serendipia.digital/2020/03/datos-abiertos-sobre-casos-de-coronavirus-covid-19-en-mexico/",
     ##    
-    ## 
-      
-       These lines will be truncated in the PDF manual.
+    ##    These lines will be truncated in the PDF manual.
     ##    checking Rd cross-references ...
       
     ✔  checking Rd cross-references
@@ -386,12 +375,12 @@ en:**
       
        checking for missing documentation entries ...
       
-    ✔  checking for missing documentation entries (393ms)
+    ✔  checking for missing documentation entries (454ms)
     ## 
       
        checking for code/documentation mismatches ...
       
-    W  checking for code/documentation mismatches (411ms)
+    W  checking for code/documentation mismatches (460ms)
     ##    Functions or methods with usage in documentation object 'hello' but not in code:
     ##      ‘hello’
     ##    
@@ -399,7 +388,7 @@ en:**
       
        checking Rd \usage sections ...
       
-    ✔  checking Rd \usage sections (1.6s)
+    ✔  checking Rd \usage sections (1.8s)
     ## 
       
        checking Rd contents ...
@@ -414,14 +403,10 @@ en:**
       
        checking examples ...
       
-    E  checking examples (744ms)
+    E  checking examples (802ms)
     ## 
       
        
-    ##    See
-    ##      ‘/tmp/RtmpgtkwDo/covidMex.Rcheck/00check.log’
-    ##    for details.
-    ##    
     ## 
       
        Running examples in ‘covidMex-Ex.R’ failed
@@ -439,9 +424,15 @@ en:**
     ##    Execution halted
     ## ✔  checking for detritus in the temp directory
     ## 
+      
+       See
+    ##      ‘/tmp/RtmpmzCdQ9/covidMex.Rcheck/00check.log’
+    ##    for details.
+    ##    
+    ## 
 
-    ## ── R CMD check results ──────────────────────────────── covidMex 0.2.0 ────
-    ## Duration: 20s
+    ## ── R CMD check results ──────────────────────────────── covidMex 0.2.1 ────
+    ## Duration: 18.4s
     ## 
     ## ❯ checking examples ... ERROR
     ##   Running examples in ‘covidMex-Ex.R’ failed
@@ -458,16 +449,15 @@ en:**
     ##   Error in hello() : could not find function "hello"
     ##   Execution halted
     ## 
-    ## ❯ checking for code/documentation mismatches ... WARNING
-    ##   Functions or methods with usage in documentation object 'hello' but not in code:
-    ##     ‘hello’
-    ## 
-    ## ❯ checking DESCRIPTION meta-information ... NOTE
-    ##   Malformed Description field: should contain one or more complete sentences.
+    ## ❯ checking DESCRIPTION meta-information ... WARNING
     ##   Non-standard license specification:
     ##     Creative Commons Attribution-NonCommercial-ShareAlike 4.0
     ##     International License
     ##   Standardizable: FALSE
+    ## 
+    ## ❯ checking for code/documentation mismatches ... WARNING
+    ##   Functions or methods with usage in documentation object 'hello' but not in code:
+    ##     ‘hello’
     ## 
     ## ❯ checking top-level files ... NOTE
     ##   Non-standard files/directories found at top level:
@@ -495,7 +485,7 @@ en:**
     ##   
     ##   These lines will be truncated in the PDF manual.
     ## 
-    ## 1 error ✖ | 1 warning ✖ | 4 notes ✖
+    ## 1 error ✖ | 2 warnings ✖ | 3 notes ✖
 
 ## TODO :white\_check\_mark:
 
@@ -541,6 +531,7 @@ en:**
 
 #### Fixed
 
+  - Fixed some minor typos in DESCRIPTION.
   - Changelog now included in README.
   - `onAttach` message fixed. It was not clear if the ‘last update’ info
     was about package or data.

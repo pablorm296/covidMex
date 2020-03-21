@@ -148,6 +148,7 @@ devtools::check(error_on = "never")
 
 #### Fixed
 
+* Fixed some minor typos in DESCRIPTION.
 * Changelog now included in README.
 * `onAttach` message fixed. It was not clear if the 'last update' info was about package or data.
 * Fixed out of date documentation of `getData` function.
