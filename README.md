@@ -3,7 +3,7 @@ covidMex
 
 Un paquete para obtener datos oficiales sobre casos de Covid-19 en
 México. Creado por [Pablo Reyes](https://twitter.com/pablorm296).
-Última actualizacion: **Thu Mar 19 16:54:23 2020**
+Última actualizacion: **Fri Mar 20 23:34:30 2020**
 
 ## Instalación :package:
 
@@ -141,9 +141,9 @@ en:**
 
     ## covidMex Package
 
-    ## Versión: 0.2.0
+    ## Version: 0.2.0
 
-    ## Last Update: 19/03/2020
+    ## Last Package Update: 19/03/2020
 
     ## Available Data Sources:
 
@@ -191,7 +191,7 @@ en:**
     ## ● _R_CHECK_FORCE_SUGGESTS_          : FALSE
     ## ── R CMD check ────────────────────────────────────────────────────────────
     ##   
-    ─  using log directory ‘/tmp/RtmpcZBR87/covidMex.Rcheck’
+    ─  using log directory ‘/tmp/RtmpgtkwDo/covidMex.Rcheck’
     ## 
       
     ─  using R version 3.6.3 (2020-02-29)
@@ -203,21 +203,19 @@ en:**
     ## 
       
     ✔  checking for file ‘covidMex/DESCRIPTION’
-    ## ─  checking extension type ... Package
+    ##    checking extension type ...
+      
+    ─  checking extension type ... Package
     ## 
       
     ─  this is package ‘covidMex’ version ‘0.2.0’
     ## ─  package encoding: UTF-8
-    ## 
-      
-       checking package namespace information ...
+    ##    checking package namespace information ...
       
     ✔  checking package namespace information
-    ## 
+    ##    checking package dependencies ...
       
-       checking package dependencies ...
-      
-    ✔  checking package dependencies (1.1s)
+    ✔  checking package dependencies (5.4s)
     ## 
       
     ✔  checking if this is a source package
@@ -230,16 +228,14 @@ en:**
     ## 
       
     ✔  checking for hidden files and directories
-    ##    checking for portable file names ...
-      
-    ✔  checking for portable file names
-    ## ✔  checking for sufficient/correct file permissions
+    ## ✔  checking for portable file names
     ## 
       
-    ✔  checking serialization versions
+    ✔  checking for sufficient/correct file permissions
+    ## ✔  checking serialization versions
     ##    checking whether package ‘covidMex’ can be installed ...
       
-    ✔  checking whether package ‘covidMex’ can be installed (2.1s)
+    ✔  checking whether package ‘covidMex’ can be installed (1.9s)
     ## 
       
        checking installed package size ...
@@ -252,7 +248,7 @@ en:**
     ✔  checking package directory
     ##    checking for future file timestamps ...
       
-    ✔  checking for future file timestamps (719ms)
+    ✔  checking for future file timestamps (1.4s)
     ## 
       
        checking DESCRIPTION meta-information ...
@@ -278,79 +274,76 @@ en:**
          ‘README.Rmd’ ‘README_files’
     ## ✔  checking for left-over files
     ## ✔  checking index information
-    ##    checking package subdirectories ...
+    ## 
+      
+       checking package subdirectories ...
       
     ✔  checking package subdirectories
     ## 
       
        checking R files for non-ASCII characters ...
       
-    W  checking R files for non-ASCII characters
+    ✔  checking R files for non-ASCII characters
     ## 
       
-       Found the following file with non-ASCII characters:
-    ##      zzz.R
-    ##    Portable packages must use only ASCII characters in their R code,
-    ##    except perhaps in comments.
-    ##    Use \uxxxx escapes for other characters.
-    ##    checking R files for syntax errors ...
+       checking R files for syntax errors ...
       
     ✔  checking R files for syntax errors
     ## 
       
        checking whether the package can be loaded ...
       
-    ✔  checking whether the package can be loaded (463ms)
+    ✔  checking whether the package can be loaded (493ms)
     ## 
       
        checking whether the package can be loaded with stated dependencies ...
       
-    ✔  checking whether the package can be loaded with stated dependencies (374ms)
+    ✔  checking whether the package can be loaded with stated dependencies (400ms)
     ## 
       
        checking whether the package can be unloaded cleanly ...
       
-    ✔  checking whether the package can be unloaded cleanly (382ms)
+    ✔  checking whether the package can be unloaded cleanly (426ms)
     ## 
       
        checking whether the namespace can be loaded with stated dependencies ...
       
-    ✔  checking whether the namespace can be loaded with stated dependencies (370ms)
+    ✔  checking whether the namespace can be loaded with stated dependencies (388ms)
     ## 
       
        checking whether the namespace can be unloaded cleanly ...
       
-    ✔  checking whether the namespace can be unloaded cleanly (446ms)
+    ✔  checking whether the namespace can be unloaded cleanly (484ms)
     ## 
       
        checking loading without being on the library search path ...
       
-    ✔  checking loading without being on the library search path (484ms)
+    ✔  checking loading without being on the library search path (505ms)
     ## 
       
        checking dependencies in R code ...
       
-    ✔  checking dependencies in R code (379ms)
+    ✔  checking dependencies in R code (404ms)
     ## 
       
        checking S3 generic/method consistency ...
       
-    ✔  checking S3 generic/method consistency (744ms)
+    ✔  checking S3 generic/method consistency (782ms)
     ## 
       
        checking replacement functions ...
       
-    ✔  checking replacement functions (382ms)
+    ✔  checking replacement functions (413ms)
     ## 
       
        checking foreign function calls ...
       
-    ✔  checking foreign function calls (402ms)
+    ✔  checking foreign function calls (415ms)
     ## 
       
        checking R code for possible problems ...
       
-    N  checking R code for possible problems (2.6s)
+    N  checking R code for possible problems (2.5s)
     ##    GetFromGuzmart: no visible global function definition for
     ##      ‘packageVersion’
     ##    GetFromSerendipia: no visible global function definition for
@@ -388,17 +381,17 @@ en:**
        These lines will be truncated in the PDF manual.
     ##    checking Rd cross-references ...
       
-    ✔  checking Rd cross-references (442ms)
+    ✔  checking Rd cross-references
     ## 
       
        checking for missing documentation entries ...
       
-    ✔  checking for missing documentation entries (392ms)
+    ✔  checking for missing documentation entries (393ms)
     ## 
       
        checking for code/documentation mismatches ...
       
-    W  checking for code/documentation mismatches (384ms)
+    W  checking for code/documentation mismatches (411ms)
     ##    Functions or methods with usage in documentation object 'hello' but not in code:
     ##      ‘hello’
     ##    
@@ -406,7 +399,7 @@ en:**
       
        checking Rd \usage sections ...
       
-    ✔  checking Rd \usage sections (1.5s)
+    ✔  checking Rd \usage sections (1.6s)
     ## 
       
        checking Rd contents ...
@@ -421,12 +414,12 @@ en:**
       
        checking examples ...
       
-    E  checking examples (796ms)
+    E  checking examples (744ms)
     ## 
       
        
     ##    See
-    ##      ‘/tmp/RtmpcZBR87/covidMex.Rcheck/00check.log’
+    ##      ‘/tmp/RtmpgtkwDo/covidMex.Rcheck/00check.log’
     ##    for details.
     ##    
     ## 
@@ -448,7 +441,7 @@ en:**
     ## 
 
     ## ── R CMD check results ──────────────────────────────── covidMex 0.2.0 ────
-    ## Duration: 15.6s
+    ## Duration: 20s
     ## 
     ## ❯ checking examples ... ERROR
     ##   Running examples in ‘covidMex-Ex.R’ failed
@@ -464,13 +457,6 @@ en:**
     ##   > hello()
     ##   Error in hello() : could not find function "hello"
     ##   Execution halted
-    ## 
-    ## ❯ checking R files for non-ASCII characters ... WARNING
-    ##   Found the following file with non-ASCII characters:
-    ##     zzz.R
-    ##   Portable packages must use only ASCII characters in their R code,
-    ##   except perhaps in comments.
-    ##   Use \uxxxx escapes for other characters.
     ## 
     ## ❯ checking for code/documentation mismatches ... WARNING
     ##   Functions or methods with usage in documentation object 'hello' but not in code:
@@ -509,13 +495,58 @@ en:**
     ##   
     ##   These lines will be truncated in the PDF manual.
     ## 
-    ## 1 error ✖ | 2 warnings ✖ | 4 notes ✖
+    ## 1 error ✖ | 1 warning ✖ | 4 notes ✖
 
 ## TODO :white\_check\_mark:
 
   - \[ \] Write a ¿python? API to provide data. Evitar dependencia de la
-    página de
-Serendipia.
+    página de Serendipia.
+
+## Changelog
+
+### 0.1.0 - 18/03/2020
+
+#### Added
+
+  - `getData` and `ParseSerendipia` functions.
+
+### 0.2.0 - 19/03/2020
+
+#### Fixed
+
+  - Error when using `date` type object in `getData` (as `date`
+    parameter).
+  - DESCRIPTION and NAMESPACE file now has propper package dependencies
+    (under CRAN rules).
+  - DESCRIPTION file now has better package information (under CRAN
+    rules). ALthough, some warnings and notes generated by `R CMD Check`
+    remain unattended.
+  - Typos in documentation.
+
+#### Changed
+
+  - README file. Better package description and functionality.
+  - `ParseSerendipia` function renamed to `GetFromSerendipia`.
+  - `getData`
+
+#### Added
+
+  - LICENSE file.
+  - `GetFromGuzmart` function. This functions downloads data from Katia
+    Guzman’s GitHub repo.
+  - `"guzmart"` is now a valid `source` parameter value in `getData`
+    function. Downloads data from Katia Guzman’s GitHub repo.
+
+### 0.2.1 - 19/03/2020
+
+#### Fixed
+
+  - Changelog now included in README.
+  - `onAttach` message fixed. It was not clear if the ‘last update’ info
+    was about package or data.
+  - Fixed out of date documentation of `getData` function.
+  - Fixed some typos in function
+comments.
 
 ## Licencia
 
