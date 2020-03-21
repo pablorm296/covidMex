@@ -48,7 +48,7 @@ GetFromSerendipia <-
     # Send page request to targetURL
     # I'm nice, so I include some headers informing that the request is
     # being made from this r package
-    # Header key names are enclosed in backtick since R interprets '-' as minus
+    # Header key names are enclosed in backticks since R interprets '-' as minus
     response <- GET(url = targetURL, add_headers(`User-Agent` = "R Package (covidMex)",
                                                  `X-Package-Version` = as.character(packageVersion("covidMex")),
                                                  `X-R-Version` = R.version.string))
@@ -69,21 +69,23 @@ GetFromSerendipia <-
       parsedDatePar <- date
     }
 
-    # Filter urls (confirmed vs suspected cases)
-    # First create a regex patter that depends on the type of cases
+    # Filter urls (confirmed vs suspect cases)
+    # First create a regex pattern that depends on the type of cases
+    # For positive (confirmed) cases
     if (type == "confirmed") {
       pattern <- "(?=positivos).*_(\\d*.\\d*.\\d*)"
+    # For suspect cases
     }  else if (type == "suspect") {
       pattern <- "(?=sospechosos).*_(\\d*.\\d*.\\d*)"
     } else {
       stop("Unknown data type! Available data types: 'confirmed' or 'suspect'")
     }
 
-    # Filter
+    # Filter links depending on the type requested by the user
     hrefs <- hrefs[grepl(pattern = pattern, x = hrefs, perl = T)]
 
     # Get dates of the documents
-    # The second column of the matrix corresponds to the date in the document name
+    # The second column of the matrix is the date of the document
     dates <- str_match(hrefs, pattern = pattern)[,2]
 
     # Get parsed version of the dates
@@ -99,8 +101,9 @@ GetFromSerendipia <-
       # Subset comparing parsedDatePar
       catSubset <- cat[cat$parsedDates == parsedDatePar,]
       # Count number of rows of subset result
-      # No rows means that there's not yet data for today
+      # No rows means that there's not data for today
       if (nrow(catSubset) == 0) {
+        # If more than 5 attempts, send error
         if (count > 5) {
           stop(paste("The specified date (", parsedDatePar ,") is not available (stopped because too many attempts)",
                      sep = ""))
@@ -191,7 +194,7 @@ GetFromGuzmart <-
     continue <- TRUE
     count <- 1
     while (continue) {
-      # Get character prepresentation of the date
+      # Get character representation of the date
       strDate <- format(parsedDatePar, "%Y%m%d")
       # Make request and save response file in temp directory
       full_targetURL <- paste(targetURL, filePrefix, strDate, fileExt, sep = "")

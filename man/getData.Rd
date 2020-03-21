@@ -15,12 +15,13 @@ getData(type = "confirmed", date = "today", source = "Guzmart")
 positive and suspected cases of Covid-19 cases in the country.
 However, the data is published as a PDF document, difficulting further analysis.
 This package relies on third party sources to get an "open data" version of the report.
-`character` vector of length 1. Possible data sources are: `Serendipia`.}
+`character` vector of length 1. As of version 0.2.0, possible data sources are:
+`Serendipia` (confirmed, suspect), and `Guzmart` (confimed).}
 }
 \value{
-A `tibble` with 8 columns:
+A `tibble` with 8/9 columns:
 Case Number, State, Sex, Age, Symptoms Onset Date, COVID-19 Test Result, Country Visited,
-Date of Arrival to Mexico
+Date of Arrival to Mexico, and and Date when case officialy registered (only available if `source = "Guzmart"`).
 }
 \description{
 Get official data about Covid-19 cases in Mexico. Main data source is Mexico's
