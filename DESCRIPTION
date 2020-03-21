@@ -4,7 +4,7 @@ Title: Official SARS-CoV-2 Data for Mexico
 Version: 0.2.1
 Author: Pablo Reyes Moctezuma
 Maintainer: Pablo Reyes Moctezumar <preyes@colmex.mx>
-Description: Gets official counts of suspected and positive cases of Covid-19 for Mexico
+Description: Get official counts of suspected and positive cases of Covid-19 in Mexico.
 License: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License
 Imports: httr, lubridate, readr, readxl, rvest, stringr, tibble
 Encoding: UTF-8
