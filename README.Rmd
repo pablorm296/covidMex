@@ -106,11 +106,6 @@ __Probado en:__
 knitr::kable(as.data.frame(R.Version()))
 ```
 
-__R CMD Check__:
-```{r echo=FALSE}
-devtools::check(error_on = "never")
-```
-
 ## TODO  :white_check_mark:
 
 * [ ] Write a ¿python? API to provide data. Evitar dependencia de la página de Serendipia.
