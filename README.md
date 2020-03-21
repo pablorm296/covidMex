@@ -3,7 +3,7 @@ covidMex
 
 Un paquete para obtener datos oficiales sobre casos de Covid-19 en
 México. Creado por [Pablo Reyes](https://twitter.com/pablorm296).
-Última actualizacion: **Fri Mar 20 23:42:44 2020**
+Última actualizacion: **Fri Mar 20 23:54:37 2020**
 
 ## Instalación :package:
 
@@ -131,11 +131,6 @@ en:**
 | :------------------- | :------ | :-------- | :----------------- | :----- | :---- | :---- | :--- | :---- | :-- | :------ | :------- | :--------------------------- | :------------------- |
 | x86\_64-pc-linux-gnu | x86\_64 | linux-gnu | x86\_64, linux-gnu |        | 3     | 6.3   | 2020 | 02    | 29  | 77875   | R        | R version 3.6.3 (2020-02-29) | Holding the Windsock |
 
-## TODO :white\_check\_mark:
-
-  - \[ \] Write a ¿python? API to provide data. Evitar dependencia de la
-    página de Serendipia.
-
 ## Changelog
 
 ### 0.1.0 - 18/03/2020
@@ -176,12 +171,21 @@ en:**
 #### Fixed
 
   - Fixed some minor typos in DESCRIPTION.
-  - Changelog now included in README.
+  - Changelog now included in README. TODO section moved to UNRELEASED
+    in Changelog.
   - `onAttach` message fixed. It was not clear if the ‘last update’ info
     was about package or data.
   - Fixed out of date documentation of `getData` function.
-  - Fixed some typos in function
-comments.
+  - Fixed some typos in function comments.
+
+### UNRELEASED
+
+  - Add `covidMxSuspects` and `covidMxConfirmed` functions. These will
+    be “super easy/fast to use” wrappers of `getData`.
+  - Some data cleaning will be performed on the returned `tibbles` by
+    `GetFromSerendipia` and `GetFromGuzmart`. Specially, propper date
+    parsing and state name
+capitalizing.
 
 ## Licencia
 

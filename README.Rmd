@@ -106,10 +106,6 @@ __Probado en:__
 knitr::kable(as.data.frame(R.Version()))
 ```
 
-## TODO  :white_check_mark:
-
-* [ ] Write a ¿python? API to provide data. Evitar dependencia de la página de Serendipia.
-
 ## Changelog
 
 ### 0.1.0 - 18/03/2020
@@ -144,10 +140,15 @@ knitr::kable(as.data.frame(R.Version()))
 #### Fixed
 
 * Fixed some minor typos in DESCRIPTION.
-* Changelog now included in README.
+* Changelog now included in README. TODO section moved to UNRELEASED in Changelog.
 * `onAttach` message fixed. It was not clear if the 'last update' info was about package or data.
 * Fixed out of date documentation of `getData` function.
 * Fixed some typos in function comments.
+
+### UNRELEASED
+
+* Add `covidMxSuspects` and `covidMxConfirmed` functions. These will be "super easy/fast to use" wrappers of `getData`. 
+* Some data cleaning will be performed on the returned `tibbles` by `GetFromSerendipia` and `GetFromGuzmart`. Specially, propper date parsing and state name capitalizing. 
 
 ## Licencia
 
