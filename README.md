@@ -3,7 +3,7 @@ covidMex
 
 Un paquete para obtener datos oficiales sobre casos de Covid-19 en
 México. Creado por [Pablo Reyes](https://twitter.com/pablorm296).
-Última actualizacion: **Mon Mar 23 01:02:48 2020**
+Última actualizacion: **Mon Mar 23 01:26:39 2020**
 
 ## Instalación :package:
 
@@ -18,9 +18,29 @@ devtools::install_github("pablorm296/covidMex")
 
 ### Básicos
 
-Para obtener los datos, usa la función `getData`. Usando el parámetro
-`type` puedes especificar el tipo de reporte a cargar (casos confirmados
-o casos sospechosos) y con el parámetro `date`especificas la versión del
+Para obtener el reporte oficial más reciente sobre los **casos
+confirmados** en México, usa la función `covidConfirmedMx`. Para obtener
+el reporte oficial más reciente sobre los **casos sospechosos** en
+México, usa la función `covidSuspectsMx`.
+
+``` r
+library(covidMex)
+
+# Descargar reporte de casos sospechosos
+sospechosos <- covidSuspectsMx()
+
+# Descargar reporte de casos confirmados
+confirmados <- covidConfirmedMx()
+```
+
+### Avanzado
+
+Tanto `covidConfirmedMx` como `covidSuspectsMx` son
+[*wrappers*](https://stat.ethz.ch/pipermail/r-help/2008-March/158393.html)
+de `getData`. La función `getData` te permite descargar el reporte
+oficial con unas cuantas opciones extras. Con el parámetro `type` puedes
+especificar el tipo de reporte a cargar (casos confirmados o casos
+sospechosos) y con el parámetro `date` especificas la versión del
 reporte (fecha en que fue publicado). Por default, `getData` descargará
 el reporte del día de casos confirmados (`type = "suspect", date =
 "today"`). Si todavía no se publica el reporte diario, `getData`
@@ -95,12 +115,13 @@ También debes tomar en cuenta que los datos devueltos por `getData`
 objetos `Date`, los nombres de las entidades federativas se ponen en
 mayúscula y los nombres de las columnas son transformados al estandar
 que maneja [el repositorio de Katia
-Guzmán](https://github.com/guzmart/covid19_mex).
+Guzmán](https://github.com/guzmart/covid19_mex). Puedes usar el
+parámetro `neat = FALSE` para obtener una versión *as is* del reporte.
 
 ### Generando gráficas a partir de los datos
 
 ``` r
-confirmados %>%
+covidConfirmedMx() %>%
   mutate(GrupoEdad = cut(edad, breaks = c(seq(0, 80, by = 10), Inf))) %>%
   ggplot() +
   geom_bar(aes(x = GrupoEdad, y = ..count..), colour = "#CC7390", 
@@ -112,7 +133,7 @@ confirmados %>%
         title = element_text(family = "Keep Calm Med"))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 ## Fuentes
 
@@ -191,17 +212,17 @@ en:**
 
   - `covidSuspectsMx` and `covidConfirmedMx` functions. These are “super
     easy/fast to use” wrappers of `getData`.
-
-#### Changed
-
-  - Some data cleaning is performed on the returned `tibbles` by
+  - Parameter `neat` in `getData`, `GetFromSerendipia`, and
+    `GetFromGuzmart` functions. This parameter allows user to decide if
+    some data cleaning is performed on the returned `tibbles` by
     `GetFromSerendipia` and `GetFromGuzmart`. Specially, propper date
-    parsing and state name
-capitalizing.
+    parsing and state name capitalizing.
 
 #### Fixed
 
-  - 
+  - Typos in README and functions
+comments.
+
 ## Licencia
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Licencia Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />Esta
