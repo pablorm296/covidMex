@@ -16,9 +16,11 @@
 #' @param targetCSS CSS selector of the nodes containing the data files URL. `character` vector of length 1.
 #' @param type Get `confirmed` or `suspect` cases?. `character` vector of length 1.
 #' @param date Date (version) of the published results. `character` vector of length 1 or `date` object.
+#' @param neat Should data be cleaned (dates, state name, column names)? `logical` vector of length 1.
 #'
 #' @importFrom tibble tibble
 #' @importFrom readr read_csv
+#' @importFrom dplyr rename
 #' @import lubridate
 #' @import stringr
 #' @import httr
@@ -29,7 +31,8 @@ GetFromSerendipia <-
   function(targetURL = "https://serendipia.digital/2020/03/datos-abiertos-sobre-casos-de-coronavirus-covid-19-en-mexico/",
            targetCSS = "a.wp-block-file__button",
            type = "confirmed",
-           date = "today") {
+           date = "today",
+           neat = TRUE) {
 
     # First some type and value check
     if (!is.character(targetURL) | length(targetURL) > 1 ) {
@@ -112,6 +115,7 @@ GetFromSerendipia <-
         warning(paste("The specified date (", parsedDatePar ,") is not available... trying yesterday's date instead",
                       sep = ""))
         parsedDatePar <- parsedDatePar - days(1)
+      # If found a doc with today's date, stop while loop
       } else {
         continue <- FALSE
       }
@@ -132,6 +136,26 @@ GetFromSerendipia <-
 
     # Read file
     data <- read_csv(targetFile)
+
+    # User wants a clean version of the data
+    if (neat) {
+      suppressWarnings({
+        data <- rename(data, num_caso = `N° Caso`,
+                       ent = `Estado`,
+                       sexo = Sexo,
+                       edad = Edad,
+                       fecha_inicio = `Fecha de Inicio de síntomas`,
+                       identificado = `Identificación de COVID-19 por RT-PCR en tiempo real`,
+                       procedencia = Procedencia,
+                       fecha_llegada_mexico = `Fecha del llegada a México`)
+        data$ent <- str_to_title(data$ent)
+        data$ent <- str_replace(data$ent, "De", "de")
+        data$fecha_llegada_mexico <- as.Date(data$fecha_llegada_mexico,
+                                             format = "%d/%m/%Y")
+        data$fecha_inicio <- as.Date(data$fecha_inicio,
+                                     format = "%d/%m/%Y")
+      })
+    }
 
     return(data)
 }
@@ -154,8 +178,10 @@ GetFromSerendipia <-
 #' @param filePrefix Target file prefix in GitHub repo. `character` vector of length 1.
 #' @param fileExt Target file extension in GitHub repo. `character` vector of length 1.
 #' @param date Date (version) of the published results. `character` vector of length 1 or `date` object.
+#' @param neat Should data be cleaned (dates, state name, column names)? `logical` vector of length 1.
 #'
 #' @importFrom readxl read_excel
+#' @importFrom dplyr rename
 #' @import lubridate
 #' @import stringr
 #' @import httr
@@ -166,7 +192,8 @@ GetFromGuzmart <-
   function (targetURL = "https://github.com/guzmart/covid19_mex/raw/master/01_datos/",
             filePrefix = "covid_mex_",
             fileExt = ".xlsx",
-            date = "today") {
+            date = "today",
+            neat = TRUE) {
 
     # First some type and value check
     if (!is.character(targetURL) | length(targetURL) > 1 ) {
@@ -214,12 +241,26 @@ GetFromGuzmart <-
                       sep = ""))
         parsedDatePar <- parsedDatePar - days(1)
       } else {
+        # If found a doc with today's date, stop while loop
         continue <- FALSE
+        # read_excel throws a lot of ugly warnings and there's not any warning supression par >:(
         suppressWarnings({
           data <- read_excel(targetFile)
-          data$fecha_llegada_mexico <- as.integer(data$fecha_llegada_mexico)
-          data$fecha_llegada_mexico <- as.Date(data$fecha_llegada_mexico, origin = "1899-12-30")
         })
+        # User wants a clean version of the data
+        if (neat) {
+          suppressWarnings({
+            data$ent <- str_to_title(data$ent)
+            data$ent <- str_replace(data$ent, "De", "de")
+            data$fecha_corte <- as.Date(data$fecha_corte)
+            data$fecha_llegada_mexico <- as.integer(data$fecha_llegada_mexico)
+            data$fecha_llegada_mexico <- as.Date(data$fecha_llegada_mexico,
+                                                 origin = "1899-12-30")
+            data$fecha_inicio <- as.integer(data$fecha_inicio)
+            data$fecha_inicio <- as.Date(data$fecha_inicio,
+                                         origin = "1899-12-30")
+          })
+        }
       }
     }
 
