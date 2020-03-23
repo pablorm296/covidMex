@@ -38,8 +38,6 @@ confirmados <- covidConfirmedMx()
 Tanto `covidConfirmedMx` como `covidSuspectsMx` son [_wrappers_](https://stat.ethz.ch/pipermail/r-help/2008-March/158393.html) de `getData`. La función `getData` te permite descargar el reporte oficial con unas cuantas opciones extras. Con el parámetro `type` puedes especificar el tipo de reporte a cargar (casos confirmados o casos sospechosos) y con el parámetro `date` especificas la versión del reporte (fecha en que fue publicado). Por default, `getData` descargará el reporte del día de casos confirmados (`type = "suspect", date = "today"`). Si todavía no se publica el reporte diario, `getData` descargará el reporte del día anterior y notificará al usuario por medio de una `warning`.
 
 ```{r message=FALSE, warning=FALSE}
-library(covidMex)
-
 # Descargar reporte de casos sospechosos
 sospechosos <- getData(type = "suspect", source = "Serendipia")
 
@@ -94,7 +92,9 @@ library(extrafont)
 
 ```{r message=FALSE, warning=FALSE}
 covidConfirmedMx() %>%
-  mutate(GrupoEdad = cut(edad, breaks = c(seq(0, 80, by = 10), Inf))) %>%
+  mutate(GrupoEdad = cut(edad, 
+                         breaks = c(seq(0, 80, by = 10), Inf),
+                         include.lowest = T)) %>%
   ggplot() +
   geom_bar(aes(x = GrupoEdad, y = ..count..), colour = "#CC7390", 
            fill = "#CC7390", alpha = 0.5, na.rm = T) +
