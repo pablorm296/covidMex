@@ -3,7 +3,11 @@ covidMex
 
 Un paquete para obtener datos oficiales sobre casos de Covid-19 en
 México. Creado por [Pablo Reyes](https://twitter.com/pablorm296).
+<<<<<<< HEAD
 Última actualizacion: **Mon Mar 23 01:31:24 2020**
+=======
+Última actualizacion: **Mon Mar 23 01:26:39 2020**
+>>>>>>> 4b26088edaacac7e5c667d98de69e1c2e5a0289a
 
 ## Instalación :package:
 
@@ -120,9 +124,13 @@ parámetro `neat = FALSE` para obtener una versión *as is* del reporte.
 
 ``` r
 covidConfirmedMx() %>%
+<<<<<<< HEAD
   mutate(GrupoEdad = cut(edad, 
                          breaks = c(seq(0, 80, by = 10), Inf),
                          include.lowest = T)) %>%
+=======
+  mutate(GrupoEdad = cut(edad, breaks = c(seq(0, 80, by = 10), Inf))) %>%
+>>>>>>> 4b26088edaacac7e5c667d98de69e1c2e5a0289a
   ggplot() +
   geom_bar(aes(x = GrupoEdad, y = ..count..), colour = "#CC7390", 
            fill = "#CC7390", alpha = 0.5, na.rm = T) +
