@@ -3,7 +3,7 @@ covidMex
 
 Un paquete para obtener datos oficiales sobre casos de Covid-19 en
 México. Creado por [Pablo Reyes](https://twitter.com/pablorm296).
-Última actualizacion: **Fri Mar 20 23:54:37 2020**
+Última actualizacion: **Mon Mar 23 01:02:48 2020**
 
 ## Instalación :package:
 
@@ -44,8 +44,8 @@ Por el momento, `getData` descarga los datos de dos fuentes:
 
 1.  **Serendipia:**
     *[Serendipia](https://serendipia.digital/2020/03/datos-abiertos-sobre-casos-de-coronavirus-covid-19-en-mexico/)*,
-    una iniciativa de periodismo de datos que ha publicado, en días
-    recientes, versiones .csv y .xlsx (creadas con
+    una iniciativa de periodismo de datos que ha publicado versiones
+    .csv y .xlsx (creadas con
     [I:heart:PDF](https://www.ilovepdf.com/es)) de los reportes
     publicados por la Secretaría de Salud del Gobierno de México.
 2.  **covid19\_mex:** Un [repositorio en
@@ -89,6 +89,13 @@ library(covidMex)
 En próximas actualizaciones programaré un script que creará,
 automaticamente, versiones .csv del reporte de SALUD y que serán
 accesibles a partir de una API y de este paquete.
+
+También debes tomar en cuenta que los datos devueltos por `getData`
+**son pre procesados** de manera que las fechas son tratadas como
+objetos `Date`, los nombres de las entidades federativas se ponen en
+mayúscula y los nombres de las columnas son transformados al estandar
+que maneja [el repositorio de Katia
+Guzmán](https://github.com/guzmart/covid19_mex).
 
 ### Generando gráficas a partir de los datos
 
@@ -178,15 +185,23 @@ en:**
   - Fixed out of date documentation of `getData` function.
   - Fixed some typos in function comments.
 
-### UNRELEASED
+### 0.3.0 - 23/03/2020
 
-  - Add `covidMxSuspects` and `covidMxConfirmed` functions. These will
-    be “super easy/fast to use” wrappers of `getData`.
-  - Some data cleaning will be performed on the returned `tibbles` by
+#### Added
+
+  - `covidSuspectsMx` and `covidConfirmedMx` functions. These are “super
+    easy/fast to use” wrappers of `getData`.
+
+#### Changed
+
+  - Some data cleaning is performed on the returned `tibbles` by
     `GetFromSerendipia` and `GetFromGuzmart`. Specially, propper date
     parsing and state name
 capitalizing.
 
+#### Fixed
+
+  - 
 ## Licencia
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Licencia Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />Esta

@@ -21,7 +21,21 @@ devtools::install_github("pablorm296/covidMex")
 
 ### Básicos
 
-Para obtener los datos, usa la función `getData`. Usando el parámetro `type` puedes especificar el tipo de reporte a cargar (casos confirmados o casos sospechosos) y con el parámetro `date`especificas la versión del reporte (fecha en que fue publicado). Por default, `getData` descargará el reporte del día de casos confirmados (`type = "suspect", date = "today"`). Si todavía no se publica el reporte diario, `getData` descargará el reporte del día anterior y notificará al usuario por medio de una `warning`.
+Para obtener el reporte oficial más reciente sobre los **casos confirmados** en México, usa la función `covidConfirmedMx`. Para obtener el reporte oficial más reciente sobre los **casos sospechosos** en México, usa la función `covidSuspectsMx`.
+
+```{r message=FALSE, warning=FALSE}
+library(covidMex)
+
+# Descargar reporte de casos sospechosos
+sospechosos <- covidSuspectsMx()
+
+# Descargar reporte de casos confirmados
+confirmados <- covidConfirmedMx()
+```
+
+### Avanzado
+
+Tanto `covidConfirmedMx` como `covidSuspectsMx` son [_wrappers_](https://stat.ethz.ch/pipermail/r-help/2008-March/158393.html) de `getData`. La función `getData` te permite descargar el reporte oficial con unas cuantas opciones extras. Con el parámetro `type` puedes especificar el tipo de reporte a cargar (casos confirmados o casos sospechosos) y con el parámetro `date` especificas la versión del reporte (fecha en que fue publicado). Por default, `getData` descargará el reporte del día de casos confirmados (`type = "suspect", date = "today"`). Si todavía no se publica el reporte diario, `getData` descargará el reporte del día anterior y notificará al usuario por medio de una `warning`.
 
 ```{r message=FALSE, warning=FALSE}
 library(covidMex)
@@ -38,7 +52,7 @@ sospechosos_old <- getData(type = "confirmed", date = "16/03/2020")
 
 Por el momento, `getData` descarga los datos de dos fuentes:
 
-1. **Serendipia:** _[Serendipia](https://serendipia.digital/2020/03/datos-abiertos-sobre-casos-de-coronavirus-covid-19-en-mexico/)_, una iniciativa de periodismo de datos que ha publicado, en días recientes, versiones .csv y .xlsx (creadas con [I:heart:PDF](https://www.ilovepdf.com/es)) de los reportes publicados por la Secretaría de Salud del Gobierno de México.
+1. **Serendipia:** _[Serendipia](https://serendipia.digital/2020/03/datos-abiertos-sobre-casos-de-coronavirus-covid-19-en-mexico/)_, una iniciativa de periodismo de datos que ha publicado versiones .csv y .xlsx (creadas con [I:heart:PDF](https://www.ilovepdf.com/es)) de los reportes publicados por la Secretaría de Salud del Gobierno de México.
 2. **covid19_mex:** Un [repositorio en GitHub](https://github.com/guzmart/covid19_mex) creado por [Katia Guzmán Martínez](https://twitter.com/guzmart_). Katia, además de convertirlo en formarto abierto, hace una revisión manual del reporte publicado por la Secretaría de Salud del Gobierno de México. Por esta razón, esta fuente es la principal al momento de descargar la tabla de casos confirmados. **Esta fuente de datos sólo tiene tabla de casos confirmados**.
 
 El usuario siempre puede especificar la fuente datos que desea usar con el parámetro `source`, aunque por deafult, para casos confirmados se usa el repositorio de Katia Guzmán y, para casos sospechosos, la página de Serendipia
@@ -69,6 +83,8 @@ Available Data Sources:
 
 En próximas actualizaciones programaré un script que creará, automaticamente, versiones .csv del reporte de SALUD y que serán accesibles a partir de una API y de este paquete.
 
+También debes tomar en cuenta que los datos devueltos por `getData` **son pre procesados** de manera que las fechas son tratadas como objetos `Date`, los nombres de las entidades federativas se ponen en mayúscula y los nombres de las columnas son transformados al estandar que maneja [el repositorio de Katia Guzmán](https://github.com/guzmart/covid19_mex). Puedes usar el parámetro `neat = FALSE` para obtener una versión _as is_ del reporte.
+
 ### Generando gráficas a partir de los datos
 
 ```{r include=FALSE}
@@ -77,7 +93,7 @@ library(extrafont)
 ```
 
 ```{r message=FALSE, warning=FALSE}
-confirmados %>%
+covidConfirmedMx() %>%
   mutate(GrupoEdad = cut(edad, breaks = c(seq(0, 80, by = 10), Inf))) %>%
   ggplot() +
   geom_bar(aes(x = GrupoEdad, y = ..count..), colour = "#CC7390", 
@@ -145,10 +161,16 @@ knitr::kable(as.data.frame(R.Version()))
 * Fixed out of date documentation of `getData` function.
 * Fixed some typos in function comments.
 
-### UNRELEASED
+### 0.3.0 - 23/03/2020
 
-* Add `covidMxSuspects` and `covidMxConfirmed` functions. These will be "super easy/fast to use" wrappers of `getData`. 
-* Some data cleaning will be performed on the returned `tibbles` by `GetFromSerendipia` and `GetFromGuzmart`. Specially, propper date parsing and state name capitalizing. 
+#### Added
+
+* `covidSuspectsMx` and `covidConfirmedMx` functions. These are "super easy/fast to use" wrappers of `getData`. 
+* Parameter `neat` in `getData`, `GetFromSerendipia`, and `GetFromGuzmart` functions. This parameter allows user to decide if some data cleaning is performed on the returned `tibbles` by `GetFromSerendipia` and `GetFromGuzmart`. Specially, propper date parsing and state name capitalizing. 
+
+#### Fixed
+
+* Typos in README and functions comments.
 
 ## Licencia
 
