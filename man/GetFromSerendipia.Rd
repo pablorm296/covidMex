@@ -7,7 +7,7 @@
 
   GetFromSerendipia(targetURL = "https://serendipia.digital/2020/03/datos-abiertos-sobre-casos-de-coronavirus-covid-19-en-mexico/",
   targetCSS = "a.wp-block-file__button", type = "confirmed",
-  date = "today")
+  date = "today", neat = TRUE)
 }
 \arguments{
 \item{targetURL}{Target URL of the HTTP request. `character` vector of length 1.}
@@ -17,6 +17,8 @@
 \item{type}{Get `confirmed` or `suspect` cases?. `character` vector of length 1.}
 
 \item{date}{Date (version) of the published results. `character` vector of length 1 or `date` object.}
+
+\item{neat}{Should data be cleaned (dates, state name, column names)? `logical` vector of length 1.}
 }
 \value{
 A `tibble` with 8 columns:
