@@ -3,7 +3,7 @@ covidMex
 
 Un paquete para obtener datos oficiales sobre casos de Covid-19 en
 México. Creado por [Pablo Reyes](https://twitter.com/pablorm296).
-Última actualizacion: **Mon Mar 23 01:34:30 2020**
+Última actualizacion: **Tue Mar 24 22:08:24 2020**
 
 ## Instalación :package:
 
@@ -220,8 +220,19 @@ en:**
 
 #### Fixed
 
-  - Typos in README and functions
-comments.
+  - Typos in README and functions comments.
+
+### 0.3.1 - 24/03/2020
+
+#### Fixed
+
+  - Serendipia updated data page, this broke scrapping routine. Changed
+    CSS targets in `getFromSerendipia`.
+  - In `getData`, `GetFromSerendipia`, and `GetFromGuzmart` `neat`
+    parameter is now set to `FALSE` as default. This prevents errors
+    when unexpected column names mess with clean routine.
+  - Proper versioning in
+DESCRIPTION.
 
 ## Licencia
 

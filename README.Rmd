@@ -72,7 +72,7 @@ library(covidMex)
 ```
 ```
 covidMex Package
-Versión: 0.2.0
+Versión: 0.3.1
 Last Update: 19/03/2020
 Available Data Sources:
     Confirmed Cases Table: Serendipia, Guzmart
@@ -171,6 +171,14 @@ knitr::kable(as.data.frame(R.Version()))
 #### Fixed
 
 * Typos in README and functions comments.
+
+### 0.3.1 - 24/03/2020
+
+#### Fixed
+
+* Serendipia updated data page, this broke scrapping routine. Changed CSS targets in `getFromSerendipia`.
+* In `getData`, `GetFromSerendipia`, and `GetFromGuzmart` `neat` parameter is now set to `FALSE` as default. This prevents errors when unexpected column names mess with clean routine.
+* Proper versioning in DESCRIPTION.
 
 ## Licencia
 
