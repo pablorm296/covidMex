@@ -7,7 +7,7 @@
 
   GetFromSerendipia(targetURL = "https://serendipia.digital/2020/03/datos-abiertos-sobre-casos-de-coronavirus-covid-19-en-mexico/",
   targetCSS = "table a, table a:link", type = "confirmed",
-  date = "today", neat = TRUE)
+  date = "today", neat = FALSE)
 }
 \arguments{
 \item{targetURL}{Target URL of the HTTP request. `character` vector of length 1.}

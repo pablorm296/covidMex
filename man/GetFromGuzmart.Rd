@@ -7,7 +7,7 @@
 
   GetFromGuzmart(targetURL = "https://github.com/guzmart/covid19_mex/raw/master/01_datos/",
   filePrefix = "covid_mex_", fileExt = ".xlsx", date = "today",
-  neat = TRUE)
+  neat = FALSE)
 }
 \arguments{
 \item{targetURL}{Target URL of the HTTP request. `character` vector of length 1.}

@@ -32,7 +32,7 @@ GetFromSerendipia <-
            targetCSS = "table a, table a:link",
            type = "confirmed",
            date = "today",
-           neat = TRUE) {
+           neat = FALSE) {
 
     # First some type and value check
     if (!is.character(targetURL) | length(targetURL) > 1 ) {
@@ -193,7 +193,7 @@ GetFromGuzmart <-
             filePrefix = "covid_mex_",
             fileExt = ".xlsx",
             date = "today",
-            neat = TRUE) {
+            neat = FALSE) {
 
     # First some type and value check
     if (!is.character(targetURL) | length(targetURL) > 1 ) {
