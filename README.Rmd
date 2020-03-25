@@ -1,13 +1,15 @@
 ---
 title: "covidMex"
-output: github_document
+output: 
+  md_document:
+    toc: true
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Un paquete para obtener datos oficiales sobre casos de Covid-19 en México. Creado por [Pablo Reyes](https://twitter.com/pablorm296). Última actualizacion: __`r date()`__
+Un paquete para obtener datos oficiales sobre casos de Covid-19 en México y el mundo. Creado por [Pablo Reyes](https://twitter.com/pablorm296). Última actualizacion: __`r date()`__
 
 ## Instalación  :package:
 
