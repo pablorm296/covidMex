@@ -29,7 +29,7 @@
 
 GetFromSerendipia <-
   function(targetURL = "https://serendipia.digital/2020/03/datos-abiertos-sobre-casos-de-coronavirus-covid-19-en-mexico/",
-           targetCSS = "a.wp-block-file__button",
+           targetCSS = "table a, table a:link",
            type = "confirmed",
            date = "today",
            neat = TRUE) {
