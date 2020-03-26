@@ -1,15 +1,14 @@
 ---
 title: "covidMex"
 output: 
-  md_document:
-    toc: true
+  github_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Un paquete para obtener datos oficiales sobre casos de Covid-19 en México y el mundo. Creado por [Pablo Reyes](https://twitter.com/pablorm296). Última actualizacion: __`r date()`__
+Un paquete para obtener datos oficiales sobre casos de Covid-19 en México y el mundo. Creado por [Pablo Reyes](https://twitter.com/pablorm296). Última actualizacion: __`r Sys.time()`__.
 
 ## Instalación  :package:
 
@@ -19,11 +18,13 @@ Para instalar el paquete, es necesario usar `install_github`, pues el paquete no
 devtools::install_github("pablorm296/covidMex")
 ```
 
-## Uso  :question:
+## Uso :wrench:
 
-### Básicos
+### Básico
 
-Para obtener el reporte oficial más reciente sobre los **casos confirmados** en México, usa la función `covidConfirmedMx`. Para obtener el reporte oficial más reciente sobre los **casos sospechosos** en México, usa la función `covidSuspectsMx`.
+#### Casos sospechosos y confirmados en México
+
+Para obtener el reporte oficial más reciente sobre los **casos confirmados en México**, usa la función `covidConfirmedMx`. Para obtener el reporte oficial más reciente sobre los **casos sospechosos en México**, usa la función `covidSuspectsMx`.
 
 ```{r message=FALSE, warning=FALSE}
 library(covidMex)
@@ -35,55 +36,87 @@ sospechosos <- covidSuspectsMx()
 confirmados <- covidConfirmedMx()
 ```
 
-### Avanzado
+#### Situación en resto del mundo
 
-Tanto `covidConfirmedMx` como `covidSuspectsMx` son [_wrappers_](https://stat.ethz.ch/pipermail/r-help/2008-March/158393.html) de `getData`. La función `getData` te permite descargar el reporte oficial con unas cuantas opciones extras. Con el parámetro `type` puedes especificar el tipo de reporte a cargar (casos confirmados o casos sospechosos) y con el parámetro `date` especificas la versión del reporte (fecha en que fue publicado). Por default, `getData` descargará el reporte del día de casos confirmados (`type = "suspect", date = "today"`). Si todavía no se publica el reporte diario, `getData` descargará el reporte del día anterior y notificará al usuario por medio de una `warning`.
+Para obtener el reporte más reciente sobre **nuevos casos y defunciones en el mundo**, usa la función `covidWWSituation`.
+
 
 ```{r message=FALSE, warning=FALSE}
-# Descargar reporte de casos sospechosos
-sospechosos <- getData(type = "suspect", source = "Serendipia")
+# Descargar reporte de nuevos casos y defunciones en el mundo
+casosCovidMundo <- covidWWSituation()
+```
 
-# Descargar reporte de casos confirmados
-confirmados <- getData(type = "confirmed")
+### Avanzado
+
+#### Obtener reportes específicos
+
+`covidConfirmedMx`, `covidSuspectsMx` y `covidWWSituation` son [_wrappers_](https://stat.ethz.ch/pipermail/r-help/2008-March/158393.html) de `getData`. 
+
+La función `getData` te permite descargar un reporte oficial específico. Con el parámetro `where` especificas el ámbito del reporte (México o el resto del mundo). Con el parámetro `type` puedes especificar el tipo de reporte a cargar (casos confirmados o casos sospechosos). Con el parámetro `date` especificas la versión del reporte (fecha en que fue publicado). Si no se encuentra la fecha especificada, `getData` intentará descargar el reporte del día anterior y notificará al usuario por medio de una `warning`. 
+
+```{r message=FALSE, warning=FALSE}
+# Descargar reporte de casos sospechosos en México
+sospechosos <- getData(where = "Mexico", type = "suspects", date = "today", 
+                       source = "Serendipia", neat = TRUE)
+
+# Descargar reporte de casos confirmados en México
+confirmados <- getData(where = "Mexico", type = "confirmed", date = "today",
+                       source = "Guzmart", neat = TRUE)
 
 # Descarga una versión anterior del reporte
-sospechosos_old <- getData(type = "confirmed", date = "16/03/2020")
+sospechosos_old <- getData(where = "Mexico", type = "confirmed", date = "16/03/2020", 
+                           source = "Serendipia", neat = TRUE)
+
+# Descarga reporte de situación en resto del mundo
+casosCovidMundo <- getData(where = "worldWide", type = "confirmed", date = "today", 
+                           source = "ECDC", neat = TRUE)
 ```
 
-Por el momento, `getData` descarga los datos de dos fuentes:
+Seguro notaste que `getData` también acepta un parámetro `source`; éste sirve para especificar la fuente de datos a cargar. Por el momento, `getData` usa cuatro fuentes de datos:
 
 1. **Serendipia:** _[Serendipia](https://serendipia.digital/2020/03/datos-abiertos-sobre-casos-de-coronavirus-covid-19-en-mexico/)_, una iniciativa de periodismo de datos que ha publicado versiones .csv y .xlsx (creadas con [I:heart:PDF](https://www.ilovepdf.com/es)) de los reportes publicados por la Secretaría de Salud del Gobierno de México.
-2. **covid19_mex:** Un [repositorio en GitHub](https://github.com/guzmart/covid19_mex) creado por [Katia Guzmán Martínez](https://twitter.com/guzmart_). Katia, además de convertirlo en formarto abierto, hace una revisión manual del reporte publicado por la Secretaría de Salud del Gobierno de México. Por esta razón, esta fuente es la principal al momento de descargar la tabla de casos confirmados. **Esta fuente de datos sólo tiene tabla de casos confirmados**.
+2. **covid19_mex:** Un [repositorio en GitHub](https://github.com/guzmart/covid19_mex) creado por [Katia Guzmán Martínez](https://twitter.com/guzmart_). Katia, además de convertirlo en formarto abierto, hace una revisión manual del reporte publicado por la Secretaría de Salud del Gobierno de México. Por esta razón, **esta fuente es la predeterminada al momento de descargar la tabla de casos confirmados para México.** Esta fuente de datos sólo tiene tabla de casos confirmados.
+3. **European Centre for Disease Prevention and Control**: La agencia de la Unión Europea encargada de la seguridad sanitaria. Además de publicar un reporte diario sobre casos de Covid-19 y defunciones en países europeos, el ECDC también empezó a publicar reportes de casos en todos los países del mundo independientes a los publicados por la Organización Mundial de la Salud. **Esta fuente es la predeterminada al momento de descargar la tabla de casos confirmados para el resto de países en el mundo.**
+4. **Johns Hopkins University Dashboard**: [Repositorio en GitHub](https://github.com/CSSEGISandData/COVID-19) con los datos mostrados en el [mapa interactivo](https://www.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6) del Johns Hopkins University Center for Systems Science and Engineering con datos de casos de Covid-19 en el mundo. La principal fuente de información de este repositorio son los datos publicados por la Organización Mundial de la Salud (OMS). Se incluyó esta fuente de datos porque es, sin duda alguna, uno de los repositorios más populares hasta el momento con datos de la pandemia. Sin embargo, los datos tienen múltiples problemas (registros incorrectos o desactualizados). Además, la OMS cambió su hora de corte el 15 de marzo de 2020, yuxtaponiendo casos correspondientes al día anterior. Esto comprometió las comparaciones entre datos antes y después de esa fecha. Por estas razones, el ECDC es la fuente predeterminada cuando se trata de datos para países del resto del mundo.
 
-El usuario siempre puede especificar la fuente datos que desea usar con el parámetro `source`, aunque por deafult, para casos confirmados se usa el repositorio de Katia Guzmán y, para casos sospechosos, la página de Serendipia
+```{r message=FALSE, warning=FALSE}
+# Descargar reporte de casos confirmados en México
+# Usamos el repositorio de Katia
+confirmados <- getData(where = "Mexico", type = "confirmed", date = "today",
+                       source = "Guzmart", neat = TRUE)
 
-```r
-# Descargar reporte de casos confirmados 
-# (Por defaul lo hará del repositorio de Katia)
-confirmados <- getData(type = "confirmed")
+# Descargar reporte de casos confirmados en México
+# Esta vez, especificando que queremos usar el sitio de Serendipia
+confirmados <- getData(where = "Mexico", type = "confirmed", date = "today",
+                       source = "Serendipia", neat = TRUE)
 
-# Descargar reporte de casos confirmados 
-# (Podemos especificar que queremos el de Serendipia)
-confirmados <- getData(type = "confirmed", source = "Serendipia")
+# Descarga reporte de casos en el resto del mundo
+# Especificamos que lo queremos desde el repositorio de la Johns Hopkins University
+casosCovidMundo <- getData(where = "worldWide", type = "confirmed", date = "today", 
+                           source = "JHU", neat = TRUE)
 ```
 
-Adicionalmente, cada vez que el usuario cargue el paquete, un mensaje le notificará las fuentes de datos disponibles
+Adicionalmente, cada vez que el usuario cargue el paquete, un mensaje le notificará las fuentes de datos disponibles:
 
 ```r
 library(covidMex)
 ```
-```
-covidMex Package
-Versión: 0.3.1
-Last Update: 19/03/2020
-Available Data Sources:
-    Confirmed Cases Table: Serendipia, Guzmart
-    Suspect Cases Table: Serendipia
+```{r echo=FALSE}
+covidMex::startUpMessage()
 ```
 
-En próximas actualizaciones programaré un script que creará, automaticamente, versiones .csv del reporte de SALUD y que serán accesibles a partir de una API y de este paquete.
+El último parámetro de `getData` es `neat`. Este parámetro le informa a la función si el usuario desea pre procesar el `tibble` obtenido de las fuentes de datos, de manera que las fechas son tratadas como objetos `Date`, los nombres de las entidades federativas se ponen en mayúscula y los nombres de las columnas son transformados al estandar que maneja [el repositorio de Katia Guzmán](https://github.com/guzmart/covid19_mex). Puedes usar el parámetro `neat = FALSE` para obtener una versión _as is_ del reporte.
 
-También debes tomar en cuenta que los datos devueltos por `getData` **son pre procesados** de manera que las fechas son tratadas como objetos `Date`, los nombres de las entidades federativas se ponen en mayúscula y los nombres de las columnas son transformados al estandar que maneja [el repositorio de Katia Guzmán](https://github.com/guzmart/covid19_mex). Puedes usar el parámetro `neat = FALSE` para obtener una versión _as is_ del reporte.
+#### Una nota sobre los parámetros
+
+Debido a la variedad de fuentes de datos y formatos en los que se presentan estos, cuando usas `getData`, debes tener en cuenta que no todas las combinaciones de parámetros son posibles. Por favor, toma en cuenta la siguiente tabla. En ella, podras ver los parámetros válidos dado un valor de `where`.
+
+| Where     | Source     | Type                | Date                                               | Neat        |
+|-----------|------------|---------------------|----------------------------------------------------|-------------|
+| Mexico    | Serendipia | confirmed, suspects | today o cualquier fecha del 15/03/2020 en adelante | TRUE, FALSE |
+| Mexico    | Guzmart    | confirmed           | today o cualquier fecha del 16/03/2020 en adelante | TRUE, FALSE |
+| worldWide | ECDC       | confirmed           | today o cualquier fecha del 01/01/2020 en adelante | TRUE, FALSE |
+| worldWide | JHU        | confirmed           | today o cualquier fecha del 24/01/2020 en adelante | TRUE, FALSE |
 
 ### Generando gráficas a partir de los datos
 
@@ -92,11 +125,16 @@ library(tidyverse)
 library(extrafont)
 ```
 
+#### Edades de los infectados en México
+
 ```{r message=FALSE, warning=FALSE}
-covidConfirmedMx() %>%
+# Tabla de casos confirmados
+covidConfirmedMx() %>% 
+  # Asignar casos a grupos de edad (10 grupos; 0-10, 11-20, 19-30... 81-90, 90+)
   mutate(GrupoEdad = cut(edad, 
-                         breaks = c(seq(0, 80, by = 10), Inf),
+                         breaks = c(seq(0, 90, by = 10), Inf),
                          include.lowest = T)) %>%
+  # ggplot!
   ggplot() +
   geom_bar(aes(x = GrupoEdad, y = ..count..), colour = "#CC7390", 
            fill = "#CC7390", alpha = 0.5, na.rm = T) +
@@ -108,13 +146,40 @@ covidConfirmedMx() %>%
   
 ```
 
-## Fuentes
+#### Evolución de número de casos en cinco países del mundo
 
-Las versiones _plain text_ de los reportes de la Secretaría de Salud que se usan en este paquete fueron publicadas originalmente en:
+```{r message=FALSE, warning=FALSE}
+# Tabla de nuevos casos y muertes
+covidWWSituation() %>%
+  # Seleccionar países
+  filter(pais_territorio %in% c("Mexico", "Spain", 
+                                "Italy", "Brazil", 
+                                "United_States_of_America")) %>%
+  # Ordenar y agrupar
+  arrange(pais_territorio, fecha_corte) %>%
+  group_by(pais_territorio, fecha_corte) %>% 
+  filter(row_number() >= min(row_number()[value != 0]))
+```
+
+## Fuentes de datos :books:
+
+Por favor, si usas este paquete en publicaciones, cita el paquete y las fuentes de datos.
+
+Los datos de casos sospechosos y confirmados en México son publicados por la Secretaría de Salud federal del gobierno mexicano:
+
+* Dirección General de Epidemiología, "Coronavirus (COVID-19): Comunicado técnico diario", https://www.gob.mx/salud/documentos/coronavirus-covid-19-comunicado-tecnico-diario-238449, consultado el 25 de marzo de 2020.
+
+Las versiones _plain text_ de los reportes de la Secretaría de Salud fueron publicadas originalmente en:
 
 * Redacción, "Datos abiertos sobre casos de Coronavirus COVID-19 en México", en _Serendipia: Periodismo de datos_, https://serendipia.digital/2020/03/datos-abiertos-sobre-casos-de-coronavirus-covid-19-en-mexico/, consultado el 18 de marzo de 2020.
 
-* Katia Guzmán Martínez, "covid19_mex: Publicación de datos oficiales (Secretaría de Salud) en formato amigable", en _GitHub_, 16 de marzo de 2020, https://github.com/guzmart/covid19_mex, consultado el 18 de marzo de 2020.
+* Katia Guzmán Martínez, "covid19_mex: Publicación de datos oficiales (Secretaría de Salud) en formato amigable", repositorio en _GitHub_, https://github.com/guzmart/covid19_mex, consultado el 18 de marzo de 2020.
+
+Los datos del reporte situacional en el resto del mundo son publicados por dos fuentes: el Centro Europeo para la Prevención y Control de Enfermedades (ECDC) y el Johns Hopkins University Center for Systems Science and Engineering.
+
+* European Centre for Disease Prevention and Control, "Download today’s data on the geographic distribution of COVID-19 cases worldwide", https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide, consultado el 25 de marzo de 2020.
+
+* Johns Hopkins University Center for Systems Science and Engineering, "COVID-19: Novel Coronavirus (COVID-19) Cases", repositorio en _GitHub_, https://github.com/CSSEGISandData/COVID-19, consultado el 25 de marzo de 2020.
 
 ## Build & Test Info  :construction_worker:
 
@@ -124,7 +189,7 @@ __Probado en:__
 knitr::kable(as.data.frame(R.Version()))
 ```
 
-## Changelog
+## Changelog :clipboard:
 
 ### 0.1.0 - 18/03/2020
 
