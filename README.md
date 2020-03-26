@@ -4,7 +4,7 @@ covidMex
 Un paquete para obtener datos oficiales sobre casos de Covid-19 en
 México y el mundo. Creado por [Pablo
 Reyes](https://twitter.com/pablorm296). Última actualizacion:
-**2020-03-25 23:22:16**.
+**2020-03-26 01:21:17**.
 
 ## Instalación :package:
 
@@ -38,11 +38,11 @@ confirmados <- covidConfirmedMx()
 
 #### Situación en resto del mundo
 
-Para obtener el reporte más reciente sobre **casos y defunciones en el
-mundo**, usa la función `covidWWSituation`.
+Para obtener el reporte más reciente sobre **nuevos casos y defunciones
+en el mundo**, usa la función `covidWWSituation`.
 
 ``` r
-# Descargar reporte de casos y defunciones en el mundo
+# Descargar reporte de nuevos casos y defunciones en el mundo
 casosCovidMundo <- covidWWSituation()
 ```
 
@@ -194,10 +194,13 @@ dado un valor de
 #### Edades de los infectados en México
 
 ``` r
-covidConfirmedMx() %>%
+# Tabla de casos confirmados
+covidConfirmedMx() %>% 
+  # Asignar casos a grupos de edad (10 grupos; 0-10, 11-20, 19-30... 81-90, 90+)
   mutate(GrupoEdad = cut(edad, 
-                         breaks = c(seq(0, 80, by = 10), Inf),
+                         breaks = c(seq(0, 90, by = 10), Inf),
                          include.lowest = T)) %>%
+  # ggplot!
   ggplot() +
   geom_bar(aes(x = GrupoEdad, y = ..count..), colour = "#CC7390", 
            fill = "#CC7390", alpha = 0.5, na.rm = T) +
@@ -211,6 +214,46 @@ covidConfirmedMx() %>%
 ![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 #### Evolución de número de casos en cinco países del mundo
+
+``` r
+# Tabla de nuevos casos y muertes
+covidWWSituation() %>%
+  # Seleccionar países
+  filter(pais_territorio %in% c("Mexico", "Spain", 
+                                "Italy", "Brazil", 
+                                "United_States_of_America")) %>%
+  # Covertrr fechas en Date y cambiar guiones bajos en espacios
+  mutate(fecha_corte = as.Date(fecha_corte), 
+         pais_territorio = gsub("_", " ", pais_territorio, fixed = T)) %>%
+  # Ordenar y agrupar
+  arrange(pais_territorio, fecha_corte) %>%
+  group_by(pais_territorio) %>%
+  # Contar casos acumulados
+  mutate(casos_acumulados = cumsum(casos_nuevos)) %>%
+  # Eliminar observaciones vacías hasta encontrar el primer caso
+  # Mantener filas a partir de la primer fila donde casos_nuevos != 0
+  filter(row_number() >= min(row_number()[casos_acumulados > 100])) %>%
+  # Días desde el primer caso y suma acumulada de casos
+  mutate(dias_transcurridos = fecha_corte - fecha_corte[1L]) %>%
+  # ggplot!
+  ggplot(aes(x = dias_transcurridos, y = casos_acumulados, colour = pais_territorio)) + 
+  # Líneas
+  geom_line(size = 1.2, alpha = 0.7) +
+  # Escalas
+  scale_y_continuous(trans = "log2") +
+  # Títulos
+  labs(y = "log(Casos acumulados)", x = "Días transcurridos desde el caso N° 100",
+       title = "¿Qué tan rápido se contagia el SARS-CoV-2?",
+       subtitle = "Casos acumulados en cinco países desde que se confirmó el caso N° 100",
+       colour = "País",
+       caption = "Datos del Centro Europeo para la Prevención y Control de Enfermedades") +
+  # Tema <3
+  theme_light() + 
+  theme(text = element_text(family = "Quicksand Medium"),
+        title = element_text(family = "Keep Calm Med"))
+```
+
+![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 ## Fuentes de datos :books:
 

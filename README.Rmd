@@ -155,10 +155,36 @@ covidWWSituation() %>%
   filter(pais_territorio %in% c("Mexico", "Spain", 
                                 "Italy", "Brazil", 
                                 "United_States_of_America")) %>%
+  # Covertrr fechas en Date y cambiar guiones bajos en espacios
+  mutate(fecha_corte = as.Date(fecha_corte), 
+         pais_territorio = gsub("_", " ", pais_territorio, fixed = T)) %>%
   # Ordenar y agrupar
   arrange(pais_territorio, fecha_corte) %>%
-  group_by(pais_territorio, fecha_corte) %>% 
-  filter(row_number() >= min(row_number()[value != 0]))
+  group_by(pais_territorio) %>%
+  # Contar casos acumulados
+  mutate(casos_acumulados = cumsum(casos_nuevos)) %>%
+  # Eliminar observaciones vacías hasta encontrar el primer caso
+  # Mantener filas a partir de la primer fila donde casos_nuevos != 0
+  filter(row_number() >= min(row_number()[casos_acumulados > 100])) %>%
+  # Días desde el primer caso y suma acumulada de casos
+  mutate(dias_transcurridos = fecha_corte - fecha_corte[1L]) %>%
+  # ggplot!
+  ggplot(aes(x = dias_transcurridos, y = casos_acumulados, colour = pais_territorio)) + 
+  # Líneas
+  geom_line(size = 1.2, alpha = 0.7) +
+  # Escalas
+  scale_y_continuous(trans = "log2") +
+  # Títulos
+  labs(y = "log(Casos acumulados)", x = "Días transcurridos desde el caso N° 100",
+       title = "¿Qué tan rápido se contagia el SARS-CoV-2?",
+       subtitle = "Casos acumulados en cinco países desde que se confirmó el caso N° 100",
+       colour = "País",
+       caption = "Datos del Centro Europeo para la Prevención y Control de Enfermedades") +
+  # Tema <3
+  theme_light() + 
+  theme(text = element_text(family = "Quicksand Medium"),
+        title = element_text(family = "Keep Calm Med"))
+  
 ```
 
 ## Fuentes de datos :books:
