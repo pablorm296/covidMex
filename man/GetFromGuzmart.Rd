@@ -2,23 +2,24 @@
 % Please edit documentation in R/requests.R
 \name{GetFromGuzmart}
 \alias{GetFromGuzmart}
-\title{Get Covid-19 Data From Katia Guzman's GitHub page}
+\title{Get Covid-19 Data From Katia Guzman's GitHub repo}
 \usage{
 
   GetFromGuzmart(targetURL = "https://github.com/guzmart/covid19_mex/raw/master/01_datos/",
   filePrefix = "covid_mex_", fileExt = ".xlsx", date = "today",
-  neat = FALSE)
+  neat = TRUE)
 }
 \arguments{
-\item{targetURL}{Target URL of the HTTP request. `character` vector of length 1.}
+\item{targetURL}{Target URL of the HTTP request. \code{character} vector of length 1.}
 
-\item{filePrefix}{Target file prefix in GitHub repo. `character` vector of length 1.}
+\item{filePrefix}{Target file prefix in GitHub repo. \code{character} vector of length 1.}
 
-\item{fileExt}{Target file extension in GitHub repo. `character` vector of length 1.}
+\item{fileExt}{Target file extension in GitHub repo. \code{character} vector of length 1.}
 
-\item{date}{Date (version) of the published results. `character` vector of length 1 or `date` object.}
+\item{date}{Date (version) of the report. \code{character} vector of length 1 or \code{Date} object.
+#' If \code{character}, date must be in day/month/year format.}
 
-\item{neat}{Should data be cleaned (dates, state name, column names)? `logical` vector of length 1.}
+\item{neat}{Should data be cleaned (dates, state name, column names)? \code{logical} vector of length 1.}
 }
 \value{
 A `tibble` with 9 columns:
@@ -26,7 +27,7 @@ Case Number, State, Sex, Age, Symptoms Onset Date, COVID-19 Test Result, Country
 Date of Arrival to Mexico, and Date when case officialy registered.
 }
 \description{
-Get Covid-19 Data From Katia Guzman's GitHub page
+Get Covid-19 Data From Katia Guzman's GitHub repo
 }
 \details{
 Mexico's Ministry of Health publishes a daily report containing data about

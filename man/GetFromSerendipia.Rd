@@ -7,21 +7,22 @@
 
   GetFromSerendipia(targetURL = "https://serendipia.digital/2020/03/datos-abiertos-sobre-casos-de-coronavirus-covid-19-en-mexico/",
   targetCSS = "table a, table a:link", type = "confirmed",
-  date = "today", neat = FALSE)
+  date = "today", neat = TRUE)
 }
 \arguments{
-\item{targetURL}{Target URL of the HTTP request. `character` vector of length 1.}
+\item{targetURL}{Target URL of the HTTP request. \code{character} vector of length 1.}
 
-\item{targetCSS}{CSS selector of the nodes containing the data files URL. `character` vector of length 1.}
+\item{targetCSS}{CSS selector of the nodes containing the data files URL. \code{character} vector of length 1.}
 
-\item{type}{Get `confirmed` or `suspect` cases?. `character` vector of length 1.}
+\item{type}{Get confirmed (\code{confirmed}) or suspect (\code{suspects}) cases?. \code{character} vector of length 1.}
 
-\item{date}{Date (version) of the published results. `character` vector of length 1 or `date` object.}
+\item{date}{Date (version) of the report. \code{character} vector of length 1 or \code{Date} object.
+#' If \code{character}, date must be in day/month/year format.}
 
-\item{neat}{Should data be cleaned (dates, state name, column names)? `logical` vector of length 1.}
+\item{neat}{Should data be cleaned (dates, state name, column names)? \code{logical} vector of length 1.}
 }
 \value{
-A `tibble` with 8 columns:
+A \code{tibble} with 8 columns:
 Case Number, State, Sex, Age, Symptoms Onset Date, COVID-19 Test Result, Country Visited,
 Date of Arrival to Mexico.
 }
