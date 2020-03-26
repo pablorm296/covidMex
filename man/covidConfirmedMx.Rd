@@ -7,7 +7,7 @@
 covidConfirmedMx()
 }
 \value{
-A `tibble` with 9 columns:
+A \code{tibble} with 9 columns:
 Case Number, State, Sex, Age, Symptoms Onset Date, COVID-19 Test Result, Country Visited,
 Date of Arrival to Mexico, and Date when the case officialy registered.
 }

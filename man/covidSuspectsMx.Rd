@@ -7,8 +7,8 @@
 covidSuspectsMx()
 }
 \value{
-A `tibble` with 8 columns:
-Case Number, State, Sex, Age, Symptoms Onset Date, COVID-19 Test Result, Country Visited, and
+A \code{tibble} with 9 columns:
+Case Number, State, County/Region, Sex, Age, Symptoms Onset Date, COVID-19 Test Result, Country Visited, and
 Date of Arrival to Mexico.
 }
 \description{
