@@ -401,7 +401,6 @@ GetFromECDC <- function(
   while (continue) {
     # Send HTTP GET request to target URL
     targetURL <- paste(prefixURL, strDate, fileExt, sep = "")
-    print(targetURL)
     response <- GET(url = targetURL, auth, write_disk(targetFile, overwrite = TRUE),
                     add_headers(`User-Agent` = "R Package (covidMex)",
                                 `X-Package-Version` = as.character(packageVersion("covidMex")),
