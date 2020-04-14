@@ -31,7 +31,7 @@ Get Covid-19 Data From Serendipia's page
 }
 \details{
 Mexico's Ministry of Health publishes a daily report containing data about
-positive and suspected cases of Covid-19 cases in the country. However, the data is published
+positive and suspected cases of Covid-19 cases in the country (Comunicado Técnico Diario). However, this report is published
 as a PDF document, difficulting further analysis. Serendipia, a data based journalism initiative,
 publishes CSV and XLSX versions of the official reports. This function makes a request to
 Serendipia's Covid-19 data page and downloads the specified data table.

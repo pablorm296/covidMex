@@ -31,7 +31,7 @@ Get Covid-19 Data From Katia Guzman's GitHub repo
 }
 \details{
 Mexico's Ministry of Health publishes a daily report containing data about
-positive and suspected cases of Covid-19 cases in the country. However, the data is published
+positive and suspected cases of Covid-19 cases in the country (Comunicado Técnico Diario). However, this report is published
 as a PDF document, difficulting further analysis. Katia Guzman makes an open format
 version of the report that it's also manually checked for errors and includes a column
 with the date when the case was first registered in the official count.

@@ -3,7 +3,7 @@
 #' Get Covid-19 Data From Serendipia's page
 #'
 #' Mexico's Ministry of Health publishes a daily report containing data about
-#' positive and suspected cases of Covid-19 cases in the country. However, the data is published
+#' positive and suspected cases of Covid-19 cases in the country (Comunicado Técnico Diario). However, this report is published
 #' as a PDF document, difficulting further analysis. Serendipia, a data based journalism initiative,
 #' publishes CSV and XLSX versions of the official reports. This function makes a request to
 #' Serendipia's Covid-19 data page and downloads the specified data table.
@@ -218,7 +218,7 @@ GetFromSerendipia <-
 #' Get Covid-19 Data From Katia Guzman's GitHub repo
 #'
 #' Mexico's Ministry of Health publishes a daily report containing data about
-#' positive and suspected cases of Covid-19 cases in the country. However, the data is published
+#' positive and suspected cases of Covid-19 cases in the country (Comunicado Técnico Diario). However, this report is published
 #' as a PDF document, difficulting further analysis. Katia Guzman makes an open format
 #' version of the report that it's also manually checked for errors and includes a column
 #' with the date when the case was first registered in the official count.
@@ -349,6 +349,72 @@ GetFromGuzmart <-
 
     return(data)
   } #end function
+
+#' Get Covid-19 Data From Mexico's Ministry of Health Open Data Node
+#'
+#' Get Covid-19 Data From Mexico's Ministry of Health Open Data Node
+#'
+#' Mexico's Ministry of Health released an open dataset with information about confirmed SARS-CoV-2 cases in the country.
+#' This function makes a request to Mexico's Federal Government open data system to retrieve the dataset.
+#' *Please keep in mind that this dataset, although official, has some errors.**
+#'
+#' @return A `tibble` with 34 columns: \cr
+#' 1. Report date, \cr
+#' 2. Type of facility where the case was registered (USMER facility / Non-USMER facility), \cr
+#' 3. Institution in charge of the facility where the case was registered (Local Gov, Federal Gov, Red Cross, Army...), \cr
+#' 4. State ID (where the the case was registered), \cr
+#' 5. Patient's gender, \cr
+#' 6. State ID (where the patient was born), \cr
+#' 7. State ID (where the patient currently lives), \cr
+#' 8. Municipality ID (where the patient currently lives), \cr
+#' 9. Type of patient (hospitalized or home care), \cr
+#' 10. Hospital admittance date (if applicable), \cr
+#' 11. Symptoms onset date, \cr
+#' 12. Date of death (if applicable), \cr
+#' 13. The patient is/was intubated?, \cr
+#' 14. The patient has/had been diagnosed with pneumonia? \cr
+#' 15. Patient's age. \cr
+#' 16. Is the patient Mexican or alien? \cr
+#' 17. Is the patient pregnant? \cr
+#' 18. Does the patiend speak an indigenous language? \cr
+#' 19. The patient has/had been diagnosed with diabetes? \cr
+#' 20. The patient has/had been diagnosed with COPD? \cr
+#' 21. The patient has/had been diagnosed with Asthma? \cr
+#' 22. The patient has/had been diagnosed with any form of immunosuppression? \cr
+#' 23. The patient has/had been diagnosed with hypertension? \cr
+#' 24. The patient has/had been diagnosed with any other comorbidities? \cr
+#' 25. The patient has/had been diagnosed with obesity? \cr
+#' 26. The patient has/had been diagnosed with any CDV? \cr
+#' 27. The patient has/had been diagnosed with CKD? \cr
+#' 28. The patient smokes? \cr
+#' 29. The patient had contact with other SARS-CoV-2 confirmed cases? \cr
+#' 30. SARS-CoV-2 test result (positive, negative, pending) \cr
+#' 31. Is the patient an immigrant? \cr
+#' 32. If immigrant, where did the patient came from? \cr
+#' 33. Patient's nationality? \cr
+#' 34. The patient is/was in ICU?
+#'
+#' @param targetURL Target URL of the HTTP request. \code{character} vector of length 1.
+#' @param filePrefix Target file prefix in GitHub repo. \code{character} vector of length 1.
+#' @param fileExt Target file extension in GitHub repo. \code{character} vector of length 1.
+#' @param date Date (version) of the report. \code{character} vector of length 1 or \code{Date} object.
+#' #' If \code{character}, date must be in day/month/year format.
+#' @param neat Should data be cleaned (dates, state name, column names)? \code{logical} vector of length 1.
+#'
+#' @importFrom readxl read_excel
+#' @importFrom dplyr rename
+#' @import lubridate
+#' @import stringr
+#' @import httr
+#' @import rvest
+#' @export
+GetFromSSA <- function(targetURL = "http://187.191.75.115/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip",
+                       filePrefix = "covid_mex_",
+                       fileExt = ".xlsx",
+                       date = "today",
+                       neat = TRUE) {
+
+}
 
 #' Get Covid-19 Data From ECDC
 #'
