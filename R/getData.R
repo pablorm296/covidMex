@@ -129,7 +129,7 @@ getData <- function(where, type, date, source, neat) {
 #'
 #' @export
 covidConfirmedMx <- function() {
-  data <- getData(where = "Mexico", type = "confirmed", date = "today", source = "Guzmart", neat = TRUE)
+  data <- getData(where = "Mexico", type = "confirmed", date = "today", source = "SSA", neat = TRUE)
   return(data)
 }
 
