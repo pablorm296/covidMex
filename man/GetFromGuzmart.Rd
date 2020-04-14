@@ -35,4 +35,6 @@ positive and suspected cases of Covid-19 cases in the country. However, the data
 as a PDF document, difficulting further analysis. Katia Guzman makes an open format
 version of the report that it's also manually checked for errors and includes a column
 with the date when the case was first registered in the official count.
+
+**WARNING: Data from \code{Guzmart} repository stopped daily updates on 06/04/2020. In future versions of this package, this source will be removed.**
 }
