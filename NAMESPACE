@@ -3,6 +3,7 @@
 export(GetFromECDC)
 export(GetFromGuzmart)
 export(GetFromJHU)
+export(GetFromSSA)
 export(GetFromSerendipia)
 export(covidConfirmedMx)
 export(covidSuspectsMx)
