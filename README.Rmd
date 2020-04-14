@@ -273,6 +273,30 @@ knitr::kable(as.data.frame(R.Version()))
 * In `getData`, `GetFromSerendipia`, and `GetFromGuzmart` `neat` parameter is now set to `FALSE` as default. This prevents errors when unexpected column names mess with clean routine.
 * Proper versioning in DESCRIPTION.
 
+### 0.5.0
+
+#### Fixed
+
+* Typos in documentation.
+
+#### Deprecated
+
+* `GetFromGuzmart` is now deprecated. Repo source stopped daily updates. **Will remove in future versions.** `GetFromSerendipia` and `getFromSSA` are the suggested replacements. Deprecation warnings placed in documentation (`getData`, `GetFromGuzmart`) and method routine (`GetFromGuzmart`).
+
+#### Changed
+
+* `GetFromSSA` is the default method for `covidConfirmedMx` wrapper (`GetFromGuzmart` was the default method).
+
+#### Added
+
+* Official Mexico's Ministry of Health (Secretaría de Salud) Open Data node is now available. As any other data source, user can get data using `getData` wrapper or `GetFromSSA`.
+* Function tests
+
+### Unrelelased
+
+* Remove `GetFromGuzmart`, and `Guzmart` (`source` parameter in `getData`).
+
+
 ## Licencia
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Licencia Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />Esta obra está bajo una <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Licencia Creative Commons Atribución-NoComercial-CompartirIgual 4.0 Internacional</a>
