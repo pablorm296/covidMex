@@ -223,6 +223,8 @@ GetFromSerendipia <-
 #' version of the report that it's also manually checked for errors and includes a column
 #' with the date when the case was first registered in the official count.
 #'
+#' **WARNING: Data from \code{Guzmart} repository stopped daily updates on 06/04/2020. In future versions of this package, this source will be removed.**
+#'
 #' @return A `tibble` with 9 columns:
 #' Case Number, State, Sex, Age, Symptoms Onset Date, COVID-19 Test Result, Country Visited,
 #' Date of Arrival to Mexico, and Date when case officialy registered.
@@ -249,7 +251,15 @@ GetFromGuzmart <-
             date = "today",
             neat = TRUE) {
 
-    # First some type and value check
+    # First deprecation warning
+    .Deprecated(
+      new = "GetFromSerendipia",
+      package = "covidMex",
+      old = "GetFromGuzmart",
+      msg = "Deprecation Warning: The repo source (guzmart/covid19_mex) stopped daily updates. In future versions, this source will be fully removed."
+    )
+
+    # Some type and value check
     if (!is.character(targetURL) | length(targetURL) > 1 ) {
      stop("'targetURL' par must be a character vector of length 1!")
     }
