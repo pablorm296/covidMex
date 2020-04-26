@@ -273,29 +273,40 @@ knitr::kable(as.data.frame(R.Version()))
 * In `getData`, `GetFromSerendipia`, and `GetFromGuzmart` `neat` parameter is now set to `FALSE` as default. This prevents errors when unexpected column names mess with clean routine.
 * Proper versioning in DESCRIPTION.
 
-### 0.5.0
+### 0.4.0 - 26/03/2020
+
+#### Fixed
+
+* Documentation typos.
+
+#### Added
+
+* Now users can download global situation reports. Two datasources are offered: the European Centre for Disease Prevention and Control, and John Hopkins Univeristy Coronavirus Resource Center. This feature is available via the wrappers `getData`, `covidWWSituation` or via `GetFromECDC`, `GetFromJHU`.
+
+### 0.5.0 - 26/04/2020
 
 #### Fixed
 
 * Typos in documentation.
+* Better handling of errors when downloaded data has unexpected format.
+* `GetFromSerendipia` broke after changes in Serendipia's report naming pattern. Now, function searches for date pattern; when found, looks for link to relevant file in nearby html nodes by matching some basic regex.
 
 #### Deprecated
 
-* `GetFromGuzmart` is now deprecated. Repo source stopped daily updates. **Will remove in future versions.** `GetFromSerendipia` and `getFromSSA` are the suggested replacements. Deprecation warnings placed in documentation (`getData`, `GetFromGuzmart`) and method routine (`GetFromGuzmart`).
+* `GetFromGuzmart` is now deprecated, since the GitHub repo used as the data source stopped daily updates. **Will remove in future versions.** `GetFromSerendipia` and `getFromSSA` are the suggested replacements. Deprecation warnings placed in documentation (`getData`, `GetFromGuzmart`) and main function routine (`GetFromGuzmart`).
 
 #### Changed
 
-* `GetFromSSA` is the default method for `covidConfirmedMx` wrapper (`GetFromGuzmart` was the default method).
+* `GetFromSerendipia` is the default method for `covidConfirmedMx` wrapper.
 
 #### Added
 
-* Official Mexico's Ministry of Health (Secretaría de Salud) Open Data node is now available. As any other data source, user can get data using `getData` wrapper or `GetFromSSA`.
-* Function tests
+* Official Mexico's Ministry of Health (Secretaría de Salud) open dataset is now available. As any other data source, user can get data using `getData` wrapper, or directly using `GetFromSSA`.
+* Function tests.
 
 ### Unrelelased
 
 * Remove `GetFromGuzmart`, and `Guzmart` (`source` parameter in `getData`).
-
 
 ## Licencia
 
