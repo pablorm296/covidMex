@@ -22,47 +22,48 @@
 \item{neat}{Should data be cleaned (dates, state name, column names)? \code{logical} vector of length 1.}
 }
 \value{
-A `tibble` with 34 columns: \cr
+A `tibble` with 35 columns: \cr
 1. Report date, \cr
-2. Type of facility where the case was registered (USMER facility / Non-USMER facility), \cr
-3. Institution in charge of the facility where the case was registered (Local Gov, Federal Gov, Red Cross, Army...), \cr
-4. State ID (where the the case was registered), \cr
-5. Patient's gender, \cr
-6. State ID (where the patient was born), \cr
-7. State ID (where the patient currently lives), \cr
-8. Municipality ID (where the patient currently lives), \cr
-9. Type of patient (hospitalized or home care), \cr
-10. Hospital admittance date (if applicable), \cr
-11. Symptoms onset date, \cr
-12. Date of death (if applicable), \cr
-13. The patient is/was intubated?, \cr
-14. The patient has/had been diagnosed with pneumonia? \cr
-15. Patient's age. \cr
-16. Is the patient Mexican or alien? \cr
-17. Is the patient pregnant? \cr
-18. Does the patiend speak an indigenous language? \cr
-19. The patient has/had been diagnosed with diabetes? \cr
-20. The patient has/had been diagnosed with COPD? \cr
-21. The patient has/had been diagnosed with Asthma? \cr
-22. The patient has/had been diagnosed with any form of immunosuppression? \cr
-23. The patient has/had been diagnosed with hypertension? \cr
-24. The patient has/had been diagnosed with any other comorbidities? \cr
-25. The patient has/had been diagnosed with obesity? \cr
-26. The patient has/had been diagnosed with any CDV? \cr
-27. The patient has/had been diagnosed with CKD? \cr
-28. The patient smokes? \cr
-29. The patient had contact with other SARS-CoV-2 confirmed cases? \cr
-30. SARS-CoV-2 test result (positive, negative, pending) \cr
-31. Is the patient an immigrant? \cr
-32. If immigrant, where did the patient came from? \cr
-33. Patient's nationality? \cr
-34. The patient is/was in ICU?
+2. Case ID,
+3. Type of facility where the case was registered (USMER facility / Non-USMER facility), \cr
+4. Institution in charge of the facility where the case was registered (Local Gov, Federal Gov, Red Cross, Army...), \cr
+5. State ID (where the the case was registered), \cr
+6. Patient's gender, \cr
+7. State ID (where the patient was born), \cr
+8. State ID (where the patient currently lives), \cr
+9. Municipality ID (where the patient currently lives), \cr
+10. Type of patient (hospitalized or home care), \cr
+11. Hospital admittance date (if applicable), \cr
+12. Symptoms onset date, \cr
+13. Date of death (if applicable), \cr
+14. The patient is/was intubated?, \cr
+15. The patient has/had been diagnosed with pneumonia? \cr
+16. Patient's age. \cr
+17. Is the patient Mexican or alien? \cr
+18. Is the patient pregnant? \cr
+19. Does the patiend speak an indigenous language? \cr
+20. The patient has/had been diagnosed with diabetes? \cr
+21. The patient has/had been diagnosed with COPD? \cr
+22. The patient has/had been diagnosed with Asthma? \cr
+23. The patient has/had been diagnosed with any form of immunosuppression? \cr
+24. The patient has/had been diagnosed with hypertension? \cr
+25. The patient has/had been diagnosed with any other comorbidities? \cr
+26. The patient has/had been diagnosed with obesity? \cr
+27. The patient has/had been diagnosed with any CDV? \cr
+28. The patient has/had been diagnosed with CKD? \cr
+29. The patient smokes? \cr
+30. The patient had contact with other SARS-CoV-2 confirmed cases? \cr
+31. SARS-CoV-2 test result (positive, negative, pending) \cr
+32. Is the patient an immigrant? \cr
+33. If immigrant, where did the patient came from? \cr
+34. Patient's nationality? \cr
+35. The patient is/was in ICU?
 }
 \description{
-Get Covid-19 Data From Mexico's Ministry of Health Open Data Node
+Get Covid-19 official report from Mexico's Ministry of Health open data node.
 }
 \details{
 Mexico's Ministry of Health released an open dataset with information about confirmed SARS-CoV-2 cases in the country.
 This function makes a request to Mexico's Federal Government open data system to retrieve the dataset.
-*Please keep in mind that this dataset, although official, has some errors.**
+*Please keep in mind that this dataset, although official, may present some inconsistencies.*
 }
