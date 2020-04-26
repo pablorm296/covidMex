@@ -30,9 +30,12 @@ Date of Arrival to Mexico.
 Get Covid-19 Data From Serendipia's page
 }
 \details{
-Mexico's Ministry of Health publishes a daily report containing data about
-positive and suspected cases of Covid-19 cases in the country (Comunicado Técnico Diario). However, this report is published
+Mexico's Ministry of Health published a daily report containing data about
+positive and suspected cases of Covid-19 cases in the country (Comunicado Técnico Diario). However, this report was published
 as a PDF document, difficulting further analysis. Serendipia, a data based journalism initiative,
 publishes CSV and XLSX versions of the official reports. This function makes a request to
 Serendipia's Covid-19 data page and downloads the specified data table.
+
+As of 14/04/2020, Mexico's Ministry of Health started publishing an open format version of their report. However, Serendipia continues to
+upload daily reports respecting the format of the old report.
 }
