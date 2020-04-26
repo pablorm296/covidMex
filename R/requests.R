@@ -30,7 +30,7 @@
 
 GetFromSerendipia <-
   function(targetURL = "https://serendipia.digital/2020/03/datos-abiertos-sobre-casos-de-coronavirus-covid-19-en-mexico/",
-           targetCSS = "table a, table a:link",
+           targetCSS = "table",
            type = "confirmed",
            date = "today",
            neat = TRUE) {
@@ -59,11 +59,21 @@ GetFromSerendipia <-
     # Parse response
     parsedResponse <- content(x = response, as = "parsed")
 
-    # Get all node elements with the target class
-    buttons <- html_nodes(x  = parsedResponse, css = targetCSS)
+    # Get all node elements with the target class (i.e. get all tables in page)
+    tables <- html_nodes(x  = parsedResponse, css = targetCSS)
 
-    # Get href attr from node elements
-    hrefs <- html_attr(x = buttons, name = "href", default = NA)
+    # Get first table (contains covid data)
+    tables <- tables[[1]]
+
+    # Get all tr elements
+    tableRows <- html_nodes(x = tables, css = "tr")
+
+    # Get text from tablerows
+    tableRowsText <- html_text(tableRows)[2:length(tableRows)]
+
+    # Get links
+    hrefs <- html_nodes(x = tableRows, css = "a")
+    hrefs <- html_attr(x = hrefs, name = "href")
 
     # Try to parse date as date
     if (!is.Date(date)) {
@@ -77,36 +87,27 @@ GetFromSerendipia <-
     # First create a regex pattern that depends on the type of cases
     # For positive (confirmed) cases
     if (type == "confirmed") {
-      pattern <- "(?=positivos).*_(\\d*.\\d*.\\d*)"
+      pattern <- "positivos"
     # For suspect cases
     }  else if (type == "suspects") {
-      pattern <- "(?=sospechosos).*_(\\d*.\\d*.\\d*)"
+      pattern <- "sospechosos"
     } else {
       stop("Unknown data type! Available data types: 'confirmed' or 'suspects'")
     }
-
-    # Filter links depending on the type requested by the user
-    hrefs <- hrefs[grepl(pattern = pattern, x = hrefs, perl = T)]
-
-    # Get dates of the documents
-    # The second column of the matrix is the date of the document
-    dates <- str_match(hrefs, pattern = pattern)[,2]
-
-    # Get parsed version of the dates
-    parsedDates <- parse_date_time(x = dates, orders = "%Y.%m.%d")
-
-    # Build a tibble with the data
-    cat <- tibble(hrefs, dates, parsedDates)
 
     # Try to get data from today's date
     continue <- TRUE
     count <- 1
     while (continue) {
-      # Subset comparing parsedDatePar
-      catSubset <- cat[cat$parsedDates == parsedDatePar,]
-      # Count number of rows of subset result
-      # No rows means that there's not data for today
-      if (nrow(catSubset) == 0) {
+      # Gen regex from date
+      datePattern <- format(parsedDatePar, "(%Y.%m.%d)|(%d%m%Y)")
+      # Match link list from date and type
+      matchType <- grepl(pattern, tableRowsText, perl = T)
+      matchDate <- grepl(datePattern, hrefs, perl =  T)
+      matchFinal <- matchType & matchDate
+      # Sum matchFinal
+      # If result is equal to 0, then no match found
+      if (sum(matchFinal) == 0) {
         # If more than 5 attempts, send error
         if (count > 5) {
           stop("The specified date (", parsedDatePar ,") is not available. No file matches the pattern (stopped because too many attempts)")
@@ -121,7 +122,7 @@ GetFromSerendipia <-
     }
 
     # Get URL from subset result
-    targetURL <- catSubset$hrefs[1]
+    targetURL <- hrefs[matchFinal]
 
     # Define temp file name
     fileExt <- str_match(targetURL, ".*\\.(\\w+)")[,2]
@@ -135,7 +136,7 @@ GetFromSerendipia <-
 
     #Check response from the server
     if (status_code(response) > 399) {
-      stop("The specified dataset is not available (GitHub server responded with status code ", status_code(response), ")")
+      stop("The specified dataset is not available (Serendipia's server responded with status code ", status_code(response), ")")
     }
 
     # Read file. Use suppressWarnings to hide parsing failures. Use suppressMessages to hide read_csv messages
@@ -157,26 +158,21 @@ GetFromSerendipia <-
         tryCatch(
           #Supress any warnings
           suppressWarnings({
-            cleanData <- rename(cleanData, num_caso = 1,
+            cleanData <- rename(cleanData, id_registro = 1,
                                 ent = 2,
-                                localidad = 3,
-                                sexo = 4,
-                                edad = 5,
-                                fecha_inicio = 6,
-                                identificado = 7,
-                                procedencia = 8,
-                                fecha_llegada_mexico = 9)
+                                sexo = 3,
+                                edad = 4,
+                                fecha_inicio = 5,
+                                identificado = 6)
             cleanData$ent <- str_to_title(cleanData$ent)
             cleanData$ent <- str_replace(cleanData$ent, "De", "de")
-            cleanData$fecha_llegada_mexico <- as.Date(cleanData$fecha_llegada_mexico,
-                                                      format = "%d/%m/%Y")
             cleanData$fecha_inicio <- as.Date(cleanData$fecha_inicio,
                                               format = "%d/%m/%Y")
             data <- cleanData
           }),
           # If error
           error = function(e) {
-            warning("Cleaning data failed! Maybe a column was added/removed or changed. Please clean the returned data manually.\n", e)
+            warning("Cleaning data failed! Maybe a column was added/removed or changed. Please clean the returned data manually.")
           }
         )
       } else if (type == "confirmed") {
@@ -186,18 +182,14 @@ GetFromSerendipia <-
         tryCatch(
           #Supress any warnings
           suppressWarnings({
-            cleanData <- rename(cleanData, num_caso = 1,
+            cleanData <- rename(cleanData, id_registro = 1,
                                 ent = 2,
                                 sexo = 3,
                                 edad = 4,
                                 fecha_inicio = 5,
-                                identificado = 6,
-                                procedencia = 7,
-                                fecha_llegada_mexico = 8)
+                                identificado = 6)
             cleanData$ent <- str_to_title(cleanData$ent)
             cleanData$ent <- str_replace(cleanData$ent, "De", "de")
-            cleanData$fecha_llegada_mexico <- as.Date(cleanData$fecha_llegada_mexico,
-                                                      format = "%d/%m/%Y")
             cleanData$fecha_inicio <- as.Date(cleanData$fecha_inicio,
                                               format = "%d/%m/%Y")
             data <- cleanData
@@ -352,47 +344,48 @@ GetFromGuzmart <-
 
 #' Get Covid-19 Data From Mexico's Ministry of Health Open Data Node
 #'
-#' Get Covid-19 Data From Mexico's Ministry of Health Open Data Node
+#' Get Covid-19 official report from Mexico's Ministry of Health open data node.
 #'
 #' Mexico's Ministry of Health released an open dataset with information about confirmed SARS-CoV-2 cases in the country.
 #' This function makes a request to Mexico's Federal Government open data system to retrieve the dataset.
-#' *Please keep in mind that this dataset, although official, has some errors.**
+#' *Please keep in mind that this dataset, although official, may present some inconsistencies.*
 #'
-#' @return A `tibble` with 34 columns: \cr
+#' @return A `tibble` with 35 columns: \cr
 #' 1. Report date, \cr
-#' 2. Type of facility where the case was registered (USMER facility / Non-USMER facility), \cr
-#' 3. Institution in charge of the facility where the case was registered (Local Gov, Federal Gov, Red Cross, Army...), \cr
-#' 4. State ID (where the the case was registered), \cr
-#' 5. Patient's gender, \cr
-#' 6. State ID (where the patient was born), \cr
-#' 7. State ID (where the patient currently lives), \cr
-#' 8. Municipality ID (where the patient currently lives), \cr
-#' 9. Type of patient (hospitalized or home care), \cr
-#' 10. Hospital admittance date (if applicable), \cr
-#' 11. Symptoms onset date, \cr
-#' 12. Date of death (if applicable), \cr
-#' 13. The patient is/was intubated?, \cr
-#' 14. The patient has/had been diagnosed with pneumonia? \cr
-#' 15. Patient's age. \cr
-#' 16. Is the patient Mexican or alien? \cr
-#' 17. Is the patient pregnant? \cr
-#' 18. Does the patiend speak an indigenous language? \cr
-#' 19. The patient has/had been diagnosed with diabetes? \cr
-#' 20. The patient has/had been diagnosed with COPD? \cr
-#' 21. The patient has/had been diagnosed with Asthma? \cr
-#' 22. The patient has/had been diagnosed with any form of immunosuppression? \cr
-#' 23. The patient has/had been diagnosed with hypertension? \cr
-#' 24. The patient has/had been diagnosed with any other comorbidities? \cr
-#' 25. The patient has/had been diagnosed with obesity? \cr
-#' 26. The patient has/had been diagnosed with any CDV? \cr
-#' 27. The patient has/had been diagnosed with CKD? \cr
-#' 28. The patient smokes? \cr
-#' 29. The patient had contact with other SARS-CoV-2 confirmed cases? \cr
-#' 30. SARS-CoV-2 test result (positive, negative, pending) \cr
-#' 31. Is the patient an immigrant? \cr
-#' 32. If immigrant, where did the patient came from? \cr
-#' 33. Patient's nationality? \cr
-#' 34. The patient is/was in ICU?
+#' 2. Case ID,
+#' 3. Type of facility where the case was registered (USMER facility / Non-USMER facility), \cr
+#' 4. Institution in charge of the facility where the case was registered (Local Gov, Federal Gov, Red Cross, Army...), \cr
+#' 5. State ID (where the the case was registered), \cr
+#' 6. Patient's gender, \cr
+#' 7. State ID (where the patient was born), \cr
+#' 8. State ID (where the patient currently lives), \cr
+#' 9. Municipality ID (where the patient currently lives), \cr
+#' 10. Type of patient (hospitalized or home care), \cr
+#' 11. Hospital admittance date (if applicable), \cr
+#' 12. Symptoms onset date, \cr
+#' 13. Date of death (if applicable), \cr
+#' 14. The patient is/was intubated?, \cr
+#' 15. The patient has/had been diagnosed with pneumonia? \cr
+#' 16. Patient's age. \cr
+#' 17. Is the patient Mexican or alien? \cr
+#' 18. Is the patient pregnant? \cr
+#' 19. Does the patiend speak an indigenous language? \cr
+#' 20. The patient has/had been diagnosed with diabetes? \cr
+#' 21. The patient has/had been diagnosed with COPD? \cr
+#' 22. The patient has/had been diagnosed with Asthma? \cr
+#' 23. The patient has/had been diagnosed with any form of immunosuppression? \cr
+#' 24. The patient has/had been diagnosed with hypertension? \cr
+#' 25. The patient has/had been diagnosed with any other comorbidities? \cr
+#' 26. The patient has/had been diagnosed with obesity? \cr
+#' 27. The patient has/had been diagnosed with any CDV? \cr
+#' 28. The patient has/had been diagnosed with CKD? \cr
+#' 29. The patient smokes? \cr
+#' 30. The patient had contact with other SARS-CoV-2 confirmed cases? \cr
+#' 31. SARS-CoV-2 test result (positive, negative, pending) \cr
+#' 32. Is the patient an immigrant? \cr
+#' 33. If immigrant, where did the patient came from? \cr
+#' 34. Patient's nationality? \cr
+#' 35. The patient is/was in ICU?
 #'
 #' @param targetURL Target URL of the HTTP request. \code{character} vector of length 1.
 #' @param filePrefix Target file prefix in GitHub repo. \code{character} vector of length 1.
