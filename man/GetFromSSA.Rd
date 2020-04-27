@@ -6,15 +6,10 @@
 \usage{
 
   GetFromSSA(targetURL = "http://187.191.75.115/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip",
-  filePrefix = "covid_mex_", fileExt = ".xlsx", date = "today",
-  neat = TRUE)
+  date = "today", neat = TRUE)
 }
 \arguments{
 \item{targetURL}{Target URL of the HTTP request. \code{character} vector of length 1.}
-
-\item{filePrefix}{Target file prefix in GitHub repo. \code{character} vector of length 1.}
-
-\item{fileExt}{Target file extension in GitHub repo. \code{character} vector of length 1.}
 
 \item{date}{Date (version) of the report. \code{character} vector of length 1 or \code{Date} object.
 #' If \code{character}, date must be in day/month/year format.}

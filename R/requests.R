@@ -26,8 +26,8 @@
 #' @importFrom tibble tibble
 #' @importFrom readr read_csv
 #' @importFrom dplyr rename
-#' @import lubridate
-#' @import stringr
+#' @importFrom lubridate is.Date today dmy days
+#' @importFrom stringr str_match
 #' @import httr
 #' @import rvest
 #' @export
@@ -51,6 +51,9 @@ GetFromSerendipia <-
     }
     if (!is.Date(date) & !is.character(date) | length(date) > 1) {
       stop("'date' par must be a date object or a character vector of length 1!")
+    }
+    if (!is.logical(neat) | is.na(neat) | length(neat) > 1) {
+      stop("'neat' par must be a logical vector of length 1!")
     }
 
     # Send page request to targetURL
@@ -233,9 +236,10 @@ GetFromSerendipia <-
 #' @param neat Should data be cleaned (dates, state name, column names)? \code{logical} vector of length 1.
 #'
 #' @importFrom readxl read_excel
+#' @importFrom tibble tibble
+#' @importFrom readr read_csv
 #' @importFrom dplyr rename
-#' @import lubridate
-#' @import stringr
+#' @importFrom lubridate is.Date today dmy days
 #' @import httr
 #' @import rvest
 #' @export
@@ -267,6 +271,9 @@ GetFromGuzmart <-
     }
     if ((!is.Date(date) & !is.character(date)) | length(date) > 1) {
      stop("'date' par must be a date object or a character vector of length 1!")
+    }
+    if (!is.logical(neat) | is.na(neat) | length(neat) > 1) {
+      stop("'neat' par must be a logical vector of length 1!")
     }
 
     # Try to parse date as date
@@ -392,24 +399,136 @@ GetFromGuzmart <-
 #' 35. The patient is/was in ICU?
 #'
 #' @param targetURL Target URL of the HTTP request. \code{character} vector of length 1.
-#' @param filePrefix Target file prefix in GitHub repo. \code{character} vector of length 1.
-#' @param fileExt Target file extension in GitHub repo. \code{character} vector of length 1.
 #' @param date Date (version) of the report. \code{character} vector of length 1 or \code{Date} object.
 #' #' If \code{character}, date must be in day/month/year format.
 #' @param neat Should data be cleaned (dates, state name, column names)? \code{logical} vector of length 1.
 #'
-#' @importFrom readxl read_excel
-#' @importFrom dplyr rename
-#' @import lubridate
-#' @import stringr
+#' @importFrom dplyr recode_factor mutate
+#' @importFrom lubridate is.Date
+#' @importFrom magrittr %>%
 #' @import httr
-#' @import rvest
 #' @export
 GetFromSSA <- function(targetURL = "http://187.191.75.115/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip",
-                       filePrefix = "covid_mex_",
-                       fileExt = ".xlsx",
                        date = "today",
                        neat = TRUE) {
+  # First some type check on parameters
+  if (!is.character(targetURL) | length(targetURL) > 1 ) {
+    stop("'targetURL' par must be a character vector of length 1!")
+  }
+  if ((!is.Date(date) & !is.character(date)) | length(date) > 1) {
+    stop("'date' par must be a date object or a character vector of length 1!")
+  }
+  if (!is.logical(neat) | is.na(neat) | length(neat) > 1) {
+    stop("'neat' par must be a logical vector of length 1!")
+  }
+
+  # Throw a warning on parameter date (no version control)
+  if (date != "today") {
+    stop("Sorry! There's not a version control system for this report. Please use date = 'today' to download the most recent version available.")
+  } else {
+    warning("Please keep in mind that the official report on Covid-19 cases has not a version control system or whatsover, therefore it's still difficult to match a specific date to a version of the report. The latest version available will be downloaded (it can be from yesterday's).")
+  }
+
+  # Define temp file name
+  fileExt <- str_match(targetURL, ".*\\.(\\w+)")[,2]
+  targetFile <- tempfile("covid19Mex_", fileext = fileExt)
+
+  # Make request and save response file in temp directory
+  response <- GET(url = targetURL, write_disk(targetFile, overwrite = T),
+                  add_headers(`User-Agent` = "R Package (covidMex)",
+                              `X-Package-Version` = as.character(packageVersion("covidMex")),
+                              `X-R-Version` = R.version.string))
+
+  #Check response from the server
+  if (status_code(response) > 399) {
+    stop("The specified dataset is not available (Federal Government Open Data Server server responded with status code ", status_code(response), ")")
+  }
+
+  #Create a temp dir to unzip file
+  targetDir <- tempdir()
+
+  #Try to unzip the file
+  tryCatch({
+    suppressWarnings(
+      unzip(targetFile, exdir = targetDir)
+    )
+  },
+  # If error
+  error = function(e) {
+    stop("An error ocurred when unzipping the data file. Try again in a few seconds, maybe server is busy.")
+  })
+
+  # Find csv file
+  dataFile <- list.files(path = targetDir, pattern = "*.csv", full.names = T)[1]
+
+  # Read file. Use suppressWarnings to hide parsing failures. Use suppressMessages to hide read_csv messages
+  suppressWarnings({
+      data <- suppressMessages(read_csv(dataFile))
+  })
+
+  # User wants a clean version of the data
+  if (neat) {
+    tryCatch({
+      suppressWarnings({
+        cleanData <- data
+        cleanData %>%
+          mutate(ORIGEN = recode_factor(ORIGEN, `1` = "USMER", `2` = "Fuera de USMER", `99` = NA_character_),
+                 SECTOR = recode_factor(SECTOR, `1` = "Cruz Roja", `2` = "DIF", `3` = "Estatal",
+                                 `4` = "IMSS", `5` = "IMSS-Bienestar", `6` = "ISSSTE", `7` = "Municipal",
+                                 `8` = "PEMEX", `9` = "Privada", `10` = "SEDENA", `11` = "SEMAR", `12` = "Federal",
+                                 `13` = "Universitario", `99` = NA_character_),
+                 SEXO = recode_factor(SEXO, `1` = "Femenino", `2` = "Masculino", `99` = NA_character_),
+                 TIPO_PACIENTE = recode_factor(TIPO_PACIENTE, `1` = "Ambulatorio", `2` = "Hospitalizado", `99` = NA_character_),
+                 INTUBADO = recode_factor(INTUBADO, `1` = "Sí", `2` = "No",
+                                   `97` = "No aplica", `98` = "Se ignora", `99` = NA_character_),
+                 NEUMONIA = recode_factor(NEUMONIA,`1` = "Sí", `2` = "No",
+                                   `97` = "No aplica", `98` = "Se ignora", `99` = NA_character_),
+                 NACIONALIDAD = recode_factor(NACIONALIDAD, `1` = "Mexicana", `2` = "Extranjero",
+                                       `99` = NA_character_),
+                 EMBARAZO = recode_factor(EMBARAZO, `1` = "Sí", `2` = "No",
+                                   `97` = "No aplica", `98` = "Se ignora", `99` = NA_character_),
+                 HABLA_LENGUA_INDIG = recode_factor(HABLA_LENGUA_INDIG, `1` = "Sí", `2` = "No",
+                                             `97` = "No aplica", `98` = "Se ignora", `99` = NA_character_),
+                 DIABETES = recode_factor(DIABETES, `1` = "Sí", `2` = "No",
+                                   `97` = "No aplica", `98` = "Se ignora", `99` = NA_character_),
+                 EPOC = recode_factor(EPOC, `1` = "Sí", `2` = "No",
+                               `97` = "No aplica", `98` = "Se ignora", `99` = NA_character_),
+                 ASMA = recode_factor(ASMA, `1` = "Sí", `2` = "No",
+                               `97` = "No aplica", `98` = "Se ignora", `99` = NA_character_),
+                 INMUSUPR = recode_factor(INMUSUPR, `1` = "Sí", `2` = "No",
+                                   `97` = "No aplica", `98` = "Se ignora", `99` = NA_character_),
+                 HIPERTENSION = recode_factor(HIPERTENSION, `1` = "Sí", `2` = "No",
+                                       `97` = "No aplica", `98` = "Se ignora", `99` = NA_character_),
+                 OTRA_COM = recode_factor(OTRA_COM, `1` = "Sí", `2` = "No",
+                                   `97` = "No aplica", `98` = "Se ignora", `99` = NA_character_),
+                 CARDIOVASCULAR = recode_factor(CARDIOVASCULAR, `1` = "Sí", `2` = "No",
+                                         `97` = "No aplica", `98` = "Se ignora", `99` = NA_character_),
+                 OBESIDAD = recode_factor(OBESIDAD, `1` = "Sí", `2` = "No",
+                                   `97` = "No aplica", `98` = "Se ignora", `99` = NA_character_),
+                 RENAL_CRONICA = recode_factor(RENAL_CRONICA, `1` = "Sí", `2` = "No",
+                                        `97` = "No aplica", `98` = "Se ignora", `99` = NA_character_),
+                 TABAQUISMO = recode_factor(TABAQUISMO, `1` = "Sí", `2` = "No",
+                                     `97` = "No aplica", `98` = "Se ignora", `99` = NA_character_),
+                 OTRO_CASO = recode_factor(OTRO_CASO, `1` = "Sí", `2` = "No",
+                                    `97` = "No aplica", `98` = "Se ignora", `99` = NA_character_),
+                 RESULTADO = recode_factor(RESULTADO, `1` = "Positivo a SARS-CoV-2",
+                                    `2` = "Negativo a SARS-CoV-2", `3` = "Pendiente"),
+                 MIGRANTE = recode_factor(MIGRANTE, `1` = "Sí", `2` = "No",
+                                   `97` = "No aplica", `98` = "Se ignora", `99` = NA_character_),
+                 UCI = recode_factor(UCI, `1` = "Sí", `2` = "No",
+                              `97` = "No aplica", `98` = "Se ignora", `99` = NA_character_)
+                 ) -> cleanData
+        data <- cleanData
+      })
+    },
+    # If error, only warn the user
+    error = function(e) {
+      warning("Cleaning data failed! Maybe a column was added/removed or changed. Please clean the returned data manually.\n", e)
+    })
+  }
+
+  return(data)
+
 
 }
 
@@ -428,9 +547,9 @@ GetFromSSA <- function(targetURL = "http://187.191.75.115/gobmx/salud/datos_abie
 #' @param auth Authentication information generated by \code{authenticate}. \code{request} object.
 #' @param neat Should data be cleaned (dates, state name, column names)? \code{logical} vector of length 1.
 #'
-#' @importFrom readxl read_excel
+#' @importFrom lubridate is.Date today dmy days
+#' @importFrom dplyr rename
 #' @import httr
-#' @import lubridate
 #' @export
 GetFromECDC <- function(
   prefixURL = "https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-",
@@ -451,6 +570,9 @@ GetFromECDC <- function(
   }
   if (class(auth) != "request") {
     stop("'auth' par must be an instance of httr::request!")
+  }
+  if (!is.logical(neat) | is.na(neat) | length(neat) > 1) {
+    stop("'neat' par must be a logical vector of length 1!")
   }
 
   # Try to parse date as date
@@ -548,7 +670,9 @@ GetFromECDC <- function(
 #' #' If \code{character}, date must be in day/month/year format.
 #' @param neat Should data be cleaned (dates, state name, column names)? \code{logical} vector of length 1.
 #'
-#'
+#' @importFrom lubridate is.Date today dmy days
+#' @importFrom dplyr rename
+#' @import httr
 #' @export
 GetFromJHU <- function(targetURL = "https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_daily_reports/",
                        fileExt = ".csv",
@@ -564,6 +688,9 @@ GetFromJHU <- function(targetURL = "https://github.com/CSSEGISandData/COVID-19/r
   }
   if ((!is.Date(date) & !is.character(date)) | length(date) > 1) {
     stop("'date' par must be a date object or a character vector of length 1!")
+  }
+  if (!is.logical(neat) | is.na(neat) | length(neat) > 1) {
+    stop("'neat' par must be a logical vector of length 1!")
   }
 
   # Try to parse date as date
