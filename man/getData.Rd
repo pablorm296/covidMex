@@ -28,7 +28,7 @@ the type of report (confirmed or suspected cases), the version of the report (i.
 and the data source. Please see details.
 }
 \details{
-Main data sources are Mexico's Federal Government Ministry of Health (Secretaría de Salud),
+Main data sources are Mexico's Federal Government Ministry of Health (Secretaría de Salud, SSA),
 the European Centre for Disease Prevention and Control, and Johns Hopkins University Center for Systems Science and
 Engineering. In the case of Mexico, although the main data source is the Federal Government Ministry of Health, there
 are third parties that generate their own data by auditing and cleaning the official report.
@@ -44,12 +44,12 @@ Where (scope) \tab Source \tab Type \tab Date \tab Neat \cr
 \code{worldWide} \tab \code{JHU} \tab \code{confirmed} \tab \code{today} or any date from 24/01/2020 onwards.\tab \code{TRUE}, \code{FALSE}
 }
 
-For example, when requesting data for Mexico, you can either use \code{Serendipia}, \code{Guzmart} or \code{Mexico}
+For example, when requesting data for Mexico, you can either use \code{Serendipia}, \code{Guzmart} or \code{SSA}
 as \code{source} parameters. If you choose \code{Serendipia},
 you can only use \code{type="confirmed"} and any date from from 16/03/2020 onwards.
 
 **WARNING: Data from \code{Guzmart} repository stopped daily updates on 06/04/2020. In future versions of this package, this source will be removed.**
 
 This functions is a wrapper for \code{\link{GetFromSerendipia}},
-\code{\link{GetFromGuzmart}}, \code{\link{GetFromJHU}}, and \code{\link{GetFromECDC}}.
+\code{\link{GetFromGuzmart}}, \code{\link{GetFromJHU}}, \code{\link{GetFromECDC}}, and \code{\link{GetFromSSA}}.
 }
