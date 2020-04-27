@@ -4,7 +4,7 @@ covidMex
 Un paquete para obtener datos oficiales sobre casos de Covid-19 en
 México y el mundo. Creado por [Pablo
 Reyes](https://twitter.com/pablorm296). Última actualizacion:
-**2020-03-26 01:21:17**.
+**2020-04-26 23:09:42**.
 
 ## Instalación :package:
 
@@ -19,16 +19,40 @@ devtools::install_github("pablorm296/covidMex")
 
 ### Básico
 
-#### Casos sospechosos y confirmados en México
+#### Datos abiertos de la Secretaría de Salud
 
-Para obtener el reporte oficial más reciente sobre los **casos
-confirmados en México**, usa la función `covidConfirmedMx`. Para obtener
-el reporte oficial más reciente sobre los **casos sospechosos en
-México**, usa la función `covidSuspectsMx`.
+Para obtener el último reporte oficial sobre casos de SARS-CoV-2 en
+México, usa la función `covidOfficialMx`.
 
 ``` r
 library(covidMex)
 
+# Descargar reporte oficial de la SS (datos abiertos)
+datos_abiertos <- covidOfficialMx()
+```
+
+#### Casos sospechosos y confirmados en México
+
+En las primeras versiones de este paquete, sólo era posible examinar un
+reporte de casos sospechosos y casos confirmados con un número limitado
+de variables. Esto se debía a que la Secretaría de Salud del Gobierno
+Federal publicaba estas dos tablas en formato PDF y sólo mediante
+terceros era posible conseguir versiones en formato abierto (CSV, XLSX).
+Afortunadamente, desde el 14 de abril de 2020, la Secretaría de Salud
+comenzó a publicar un reporte en formato abierto más completo con
+información de los casos a los que se les da seguimiento (véase arriba
+el uso de `covidOfficialMx`).
+
+Decidí mantener estas dos tablas de casos sospechosos y confirmados para
+garantizar una continuidad en el formato de los datos y el
+funcionamiento del código escrito con el paquete; esto facilitará su
+comparación y análisis.
+
+Para obtener el reporte de **casos confirmados en México**, usa la
+función `covidConfirmedMx`. Para obtener el reporte sobre los **casos
+sospechosos en México**, usa la función `covidSuspectsMx`.
+
+``` r
 # Descargar reporte de casos sospechosos
 sospechosos <- covidSuspectsMx()
 
@@ -50,7 +74,8 @@ casosCovidMundo <- covidWWSituation()
 
 #### Obtener reportes específicos
 
-`covidConfirmedMx`, `covidSuspectsMx` y `covidWWSituation` son
+`covidConfirmedMx`, `covidSuspectsMx`, `covidOfficialMx` y
+`covidWWSituation` son
 [*wrappers*](https://stat.ethz.ch/pipermail/r-help/2008-March/158393.html)
 de `getData`.
 
@@ -64,13 +89,17 @@ intentará descargar el reporte del día anterior y notificará al usuario
 por medio de una `warning`.
 
 ``` r
+# Descargar reporte en formato abierto de la secretaría de Salud
+oficial <- getData(where = "Mexico", type = "suspects", date = "today", 
+                   source = "SSA", neat = TRUE)
+
 # Descargar reporte de casos sospechosos en México
 sospechosos <- getData(where = "Mexico", type = "suspects", date = "today", 
                        source = "Serendipia", neat = TRUE)
 
 # Descargar reporte de casos confirmados en México
 confirmados <- getData(where = "Mexico", type = "confirmed", date = "today",
-                       source = "Guzmart", neat = TRUE)
+                       source = "Serendipia", neat = TRUE)
 
 # Descarga una versión anterior del reporte
 sospechosos_old <- getData(where = "Mexico", type = "confirmed", date = "16/03/2020", 
@@ -85,20 +114,15 @@ Seguro notaste que `getData` también acepta un parámetro `source`; éste
 sirve para especificar la fuente de datos a cargar. Por el momento,
 `getData` usa cuatro fuentes de datos:
 
-1.  **Serendipia:**
+1.  **Secretaría de Salud**: Reporte en formato abierto del seguimiento
+    que se da a los casos positivos y sospechosos de SARS-CoV-2 en
+    México.
+2.  **Serendipia:**
     *[Serendipia](https://serendipia.digital/2020/03/datos-abiertos-sobre-casos-de-coronavirus-covid-19-en-mexico/)*,
     una iniciativa de periodismo de datos que ha publicado versiones
     .csv y .xlsx (creadas con
     [I:heart:PDF](https://www.ilovepdf.com/es)) de los reportes
     publicados por la Secretaría de Salud del Gobierno de México.
-2.  **covid19\_mex:** Un [repositorio en
-    GitHub](https://github.com/guzmart/covid19_mex) creado por [Katia
-    Guzmán Martínez](https://twitter.com/guzmart_). Katia, además de
-    convertirlo en formarto abierto, hace una revisión manual del
-    reporte publicado por la Secretaría de Salud del Gobierno de México.
-    Por esta razón, **esta fuente es la predeterminada al momento de
-    descargar la tabla de casos confirmados para México.** Esta fuente
-    de datos sólo tiene tabla de casos confirmados.
 3.  **European Centre for Disease Prevention and Control**: La agencia
     de la Unión Europea encargada de la seguridad sanitaria. Además de
     publicar un reporte diario sobre casos de Covid-19 y defunciones en
@@ -124,14 +148,14 @@ sirve para especificar la fuente de datos a cargar. Por el momento,
     esa fecha. Por estas razones, el ECDC es la fuente predeterminada
     cuando se trata de datos para países del resto del mundo.
 
-<!-- end list -->
+Los usuarios de versiones anteriores notarán que la fuente `Guzmart` ya
+no está en esta lista. Aunque aún se puede usar este paquete para
+acceder a los reportes publicados en el [repositorio de Katia
+Guzmán](https://github.com/guzmart/covid19_mex), usando `getData` o
+`GetFromGuzmart`, **esta opción ha sido deprecada, pues el repositorio
+dejó de recibir actualizaciones el 6 de abril de 2020**.
 
 ``` r
-# Descargar reporte de casos confirmados en México
-# Usamos el repositorio de Katia
-confirmados <- getData(where = "Mexico", type = "confirmed", date = "today",
-                       source = "Guzmart", neat = TRUE)
-
 # Descargar reporte de casos confirmados en México
 # Esta vez, especificando que queremos usar el sitio de Serendipia
 confirmados <- getData(where = "Mexico", type = "confirmed", date = "today",
@@ -152,26 +176,23 @@ library(covidMex)
 
     ## covidMex Package
 
-    ## Version: 0.4.0
+    ## Version: 0.5.0
 
-    ## Last Package Update: 19/03/2020
+    ## Last Package Update: 26/04/2020
 
     ## Available Data Sources:
 
-    ##     Confirmed Cases in Mexico: Serendipia, Guzmart
+    ##     Confirmed Cases in Mexico: Serendipia, SSA
 
     ##     Suspect Cases in Mexico: Serendipia
 
     ##     WorldWide Situation Report: ECDC, JHU CSSE
 
-El último parámetro de `getData` es `neat`. Este parámetro le informa a
+El último parámetro de `getData` es `neat`. Este parámetro le indica a
 la función si el usuario desea pre procesar el `tibble` obtenido de las
-fuentes de datos, de manera que las fechas son tratadas como objetos
-`Date`, los nombres de las entidades federativas se ponen en mayúscula y
-los nombres de las columnas son transformados al estandar que maneja [el
-repositorio de Katia Guzmán](https://github.com/guzmart/covid19_mex).
-Puedes usar el parámetro `neat = FALSE` para obtener una versión *as is*
-del reporte.
+fuentes de datos. En el caso del reporte oficial generado por la
+Secretaría de Salud, `neat` convertirá en `factor` las variable y usará
+el catálogo de valores adjunto al dataset.
 
 #### Una nota sobre los parámetros
 
@@ -182,12 +203,13 @@ cuenta la siguiente tabla. En ella, podras ver los parámetros válidos
 dado un valor de
 `where`.
 
-| Where     | Source     | Type                | Date                                               | Neat        |
-| --------- | ---------- | ------------------- | -------------------------------------------------- | ----------- |
-| Mexico    | Serendipia | confirmed, suspects | today o cualquier fecha del 15/03/2020 en adelante | TRUE, FALSE |
-| Mexico    | Guzmart    | confirmed           | today o cualquier fecha del 16/03/2020 en adelante | TRUE, FALSE |
-| worldWide | ECDC       | confirmed           | today o cualquier fecha del 01/01/2020 en adelante | TRUE, FALSE |
-| worldWide | JHU        | confirmed           | today o cualquier fecha del 24/01/2020 en adelante | TRUE, FALSE |
+| Where     | Source     | Type                | Date                                                 | Neat        |
+| --------- | ---------- | ------------------- | ---------------------------------------------------- | ----------- |
+| Mexico    | Serendipia | confirmed, suspects | today o cualquier fecha del 15/03/2020 en adelante   | TRUE, FALSE |
+| Mexico    | SSA        | confirmed           | today                                                | TRUE, FALSE |
+| Mexico    | Guzmart    | confirmed           | today o cualquier fecha del 16/03/2020 al 06/04/2020 | TRUE, FALSE |
+| worldWide | ECDC       | confirmed           | today o cualquier fecha del 01/01/2020 en adelante   | TRUE, FALSE |
+| worldWide | JHU        | confirmed           | today o cualquier fecha del 24/01/2020 en adelante   | TRUE, FALSE |
 
 ### Generando gráficas a partir de los datos
 
@@ -211,7 +233,7 @@ covidConfirmedMx() %>%
         title = element_text(family = "Keep Calm Med"))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 #### Evolución de número de casos en cinco países del mundo
 
@@ -253,7 +275,7 @@ covidWWSituation() %>%
         title = element_text(family = "Keep Calm Med"))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
 ## Fuentes de datos :books:
 
@@ -266,7 +288,10 @@ por la Secretaría de Salud federal del gobierno mexicano:
   - Dirección General de Epidemiología, “Coronavirus (COVID-19):
     Comunicado técnico diario”,
     <https://www.gob.mx/salud/documentos/coronavirus-covid-19-comunicado-tecnico-diario-238449>,
-    consultado el 25 de marzo de 2020.
+    consultado el 26 de abril de 2020.
+  - Dirección General de Epidemiología, “Datos abiertos”,
+    <https://www.gob.mx/salud/documentos/datos-abiertos-152127>,
+    consultado el 26 de abril de 2020.
 
 Las versiones *plain text* de los reportes de la Secretaría de Salud
 fueron publicadas originalmente en:
@@ -275,11 +300,6 @@ fueron publicadas originalmente en:
     México”, en *Serendipia: Periodismo de datos*,
     <https://serendipia.digital/2020/03/datos-abiertos-sobre-casos-de-coronavirus-covid-19-en-mexico/>,
     consultado el 18 de marzo de 2020.
-
-  - Katia Guzmán Martínez, “covid19\_mex: Publicación de datos oficiales
-    (Secretaría de Salud) en formato amigable”, repositorio en *GitHub*,
-    <https://github.com/guzmart/covid19_mex>, consultado el 18 de marzo
-    de 2020.
 
 Los datos del reporte situacional en el resto del mundo son publicados
 por dos fuentes: el Centro Europeo para la Prevención y Control de
@@ -378,8 +398,64 @@ en:**
   - In `getData`, `GetFromSerendipia`, and `GetFromGuzmart` `neat`
     parameter is now set to `FALSE` as default. This prevents errors
     when unexpected column names mess with clean routine.
-  - Proper versioning in
-DESCRIPTION.
+  - Proper versioning in DESCRIPTION.
+
+### 0.4.0 - 26/03/2020
+
+#### Fixed
+
+  - Documentation typos.
+
+#### Added
+
+  - Now users can download global situation reports. Two datasources are
+    offered: the European Centre for Disease Prevention and Control, and
+    John Hopkins Univeristy Coronavirus Resource Center. This feature is
+    available via the wrappers `getData`, `covidWWSituation` or via
+    `GetFromECDC`, `GetFromJHU`.
+
+### 0.5.0 - 26/04/2020
+
+#### Fixed
+
+  - Typos in documentation.
+  - Better handling of errors when downloaded data has unexpected
+    format.
+  - `GetFromSerendipia` broke after changes in Serendipia’s report
+    naming pattern. Now, function searches for date pattern; when found,
+    looks for link to relevant file in nearby html nodes by matching
+    some regex.
+
+#### Deprecated
+
+  - `GetFromGuzmart` is now deprecated, since the GitHub repo used as
+    the data source stopped daily updates. **Will remove in future
+    versions.** `GetFromSerendipia` and `getFromSSA` are the suggested
+    replacements. Deprecation warnings placed in documentation
+    (`getData`, `GetFromGuzmart`) and main function routine
+    (`GetFromGuzmart`).
+
+#### Changed
+
+  - `GetFromSerendipia` is the default method for `covidConfirmedMx`
+    wrapper.
+
+#### Added
+
+  - Official Mexico’s Ministry of Health (Secretaría de Salud) open
+    dataset is now available. As any other data source, user can get
+    data using `getData` or `covidOfficialMx` wrapper, or directly using
+    `GetFromSSA`.
+  - Included package tests to better bug identification.
+
+### Unrelelased
+
+  - Remove `GetFromGuzmart`, and `Guzmart` (`source` parameter in
+    `getData`).
+  - When `neat` parameter is used in `GetFromSSA`, include state and
+    municipalities names.
+  - Allow user to use `date` parameter in
+`GetFromSSA`.
 
 ## Licencia
 
